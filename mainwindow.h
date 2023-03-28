@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QLabel>
+#include <QPushButton>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -14,8 +16,12 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+    void SelectAppearance(); //切换外观
 private:
     Ui::MainWindow *ui;
+
+    QLabel* pet_appearance; //外观显示Lable指针
+
+    QPushButton* select_appearance_btn; //切换外观按钮指针
 };
 #endif // MAINWINDOW_H
