@@ -24,3 +24,20 @@ void MainWindow::SelectAppearance(){
     pet_appearance->setPixmap(QPixmap(":/resources/static/default.png").scaled(pet_appearance->size()));
 }
 
+void MainWindow::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+               m_dragging = true;
+               m_startPos = event->globalPos() - frameGeometry().topLeft();
+                pet_appearance->setPixmap(QPixmap(":/resources/static/default2.png").scaled(pet_appearance->size()));
+           }
+}
+
+
+void MainWindow::mouseReleaseEvent(QMouseEvent *event)
+  {
+      if (event->button() == Qt::LeftButton) {
+          m_dragging = false;
+           pet_appearance->setPixmap(QPixmap(":/resources/static/default.png").scaled(pet_appearance->size()));
+      }
+  }
