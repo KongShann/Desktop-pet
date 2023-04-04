@@ -44,9 +44,10 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)  {
 
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
+    //释放窗口
   {
       if (event->button() == Qt::LeftButton) {
           m_dragging = false;
            pet_appearance->setPixmap(QPixmap(":/resources/static/default.png").scaled(pet_appearance->size()));
       }
-  }
+}
