@@ -20,7 +20,6 @@ public:
     ~MainWindow();
     void SelectAppearance(); //切换外观
     void mousePressEvent(QMouseEvent *event);//鼠标单击实现互动
-    void mouseReleaseEvent(QMouseEvent *event);//释放鼠标回到之前状态
 private:
     Ui::MainWindow *ui;
 
