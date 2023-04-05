@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "shopdress.h"
 #include "ui_mainwindow.h"
 
 
@@ -21,20 +22,24 @@ MainWindow::MainWindow(QWidget *parent)
     setAttribute(Qt::WA_TranslucentBackground);
     Qt::WindowFlags m_flags = windowFlags();
     setWindowFlags(m_flags|Qt::WindowStaysOnTopHint);
+
+    click_to_shopButton=new QPushButton("shop",this);
+    connect(click_to_shopButton,&QPushButton::clicked,this,&MainWindow::gotoshop);
+
     pet_displayed_label=new QLabel(this);
     pet_displayed_label->resize(175,150);
     pet_displayed_label->move(125,50);
     pet_displayed_label->setPixmap(displayed_pet_appearance.app_picture.scaled(pet_displayed_label->size()));
-    //SelectAppearance();
     InitButton();
+
     m_hungerLabel = new QLabel("Hunger level: " + QString::number(m_hunger), this);
     m_hungerLabel->hide(); // Hide the label initially
     m_hungerLabel->setGeometry(50, 50, 150, 30);
 
     m_feedButton = new QPushButton("Feed pet", this);
     m_feedButton->setGeometry(50, 100, 100, 30);
-    connect(m_feedButton, SIGNAL(clicked()), this, SLOT(showFoodList()));
 
+    connect(m_feedButton, SIGNAL(clicked()), this, SLOT(showFoodList()));
     m_hungerTimer = new QTimer(this);
     connect(m_hungerTimer, SIGNAL(timeout()), this, SLOT(increaseHunger()));
     m_hungerTimer->start(1800000); // Increase hunger every second
@@ -42,7 +47,6 @@ MainWindow::MainWindow(QWidget *parent)
     m_eatingMovie->setScaledSize(pet_displayed_label->size());
     connect(m_eatingMovie, SIGNAL(finished()), this, SLOT(stopEating()));
 
-    //SelectAppearance();
     InitButton();
 }
 MainWindow::~MainWindow()
@@ -50,15 +54,14 @@ MainWindow::~MainWindow()
     delete ui;
     delete pet_displayed_label;
 }
-
-
-void MainWindow::SelectAppearance(){
-    pet_displayed_label->resize(175,150);
-    pet_displayed_label->setPixmap(QPixmap(":/resources/static/default.png").scaled(pet_displayed_label->size()));
+void MainWindow::gotoshop()
+{
+    shopDress shop;
+    shop.show();
+    shop.exec();
 }
-
-
-void MainWindow::feedPet(){
+void MainWindow::feedPet()
+{
     // Get the selected food item
        QListWidgetItem *selectedItem = ((QListWidget*)sender())->currentItem();
 
@@ -101,12 +104,12 @@ void MainWindow::increaseHunger()
 void MainWindow::enterEvent(QEvent *event)
 {
     m_hungerLabel->setText("Hunger level: " + QString::number(m_hunger));
-        m_hungerLabel->show();
+    m_hungerLabel->show();
 }
 
 void MainWindow::leaveEvent(QEvent *event)
 {
-  m_hungerLabel->hide();
+    m_hungerLabel->hide();
 }
 
 

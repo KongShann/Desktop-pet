@@ -9,6 +9,7 @@
 #include <QVBoxLayout>
 #include <QListWidget>
 #include <QMovie>
+
 #include "petobjects_struct.h"
 #include "appchoosewindow.h"
 
@@ -33,15 +34,15 @@ public:
     void SelectAppearance(); //切换外观
     void InitButton();
     int hunger() const;
-     void setHunger(int hunger);
+    void setHunger(int hunger);
 signals:
-     void hungerChanged(int hunger);
+    void hungerChanged(int hunger);
 private slots:
-      void feedPet();
-      void increaseHunger();
-       void showFoodList();
-       void startEating();
-       void stopEating();
+    void feedPet();
+    void increaseHunger();
+    void showFoodList();
+    void startEating();
+    void stopEating();
 
 
 protected:
@@ -50,7 +51,7 @@ protected:
 
 private:
     Ui::MainWindow *ui;
-     int m_hunger;
+    int m_hunger;
     QLabel* pet_displayed_label; //外观显示Lable指针
     QLabel *m_hungerLabel;//显示饥饿值指针
     QPushButton* appchoose_btn; //切换外观按钮指针
@@ -60,7 +61,9 @@ private:
     QVector<PetAppearance> *owned_pet_appearances;
     PetAppearance displayed_pet_appearance;
     AppChooseWindow* appchoose_win; //切换外观窗口
+    QPushButton* click_to_shopButton;//进入商店按扭
 
+    void gotoshop();
 };
 #endif // MAINWINDOW_H
 
