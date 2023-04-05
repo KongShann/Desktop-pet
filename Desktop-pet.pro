@@ -16,17 +16,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    appchoosewindow.cpp \
     main.cpp \
     mainwindow.cpp \
-    shopdress.cpp
+    shopdress.cpp\
+    pushlabel.cpp
 
 HEADERS += \
     mainwindow.h \
-    shopdress.h
+    shopdress.h \
+    appchoosewindow.h \
+    petobjects_struct.h \
+    pushlabel.h
 
 FORMS += \
     mainwindow.ui \
-    shopdress.ui
+    shopdress.ui \
+    appchoosewindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
