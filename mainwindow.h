@@ -23,5 +23,8 @@ private:
     QLabel* pet_appearance; //外观显示Lable指针
 
     QPushButton* select_appearance_btn; //切换外观按钮指针
+    QPushButton* click_to_shopButton;//进入商店按扭
+
+    void gotoshop();
 };
 #endif // MAINWINDOW_H
