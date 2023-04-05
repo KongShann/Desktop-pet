@@ -16,13 +16,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    appchoosewindow.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    pushlabel.cpp
 
 HEADERS += \
-    mainwindow.h
+    appchoosewindow.h \
+    mainwindow.h \
+    petobjects_struct.h \
+    pushlabel.h
 
 FORMS += \
+    appchoosewindow.ui \
     mainwindow.ui
 
 # Default rules for deployment.

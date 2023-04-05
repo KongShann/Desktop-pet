@@ -5,40 +5,56 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), m_hunger(50)
     , ui(new Ui::MainWindow)
-{
+{    
     ui->setupUi(this);
+
+    QString a= ":/resources/static/default.png";
+    QString b= ":/resources/static/default2.png";
+
+    owned_pet_appearances=new QVector<PetAppearance>;
+    owned_pet_appearances->push_back(PetAppearance(0,a));
+    owned_pet_appearances->push_back(PetAppearance(1,b));
+
+    displayed_pet_appearance=(*owned_pet_appearances)[1];
+
     setWindowFlags(Qt::FramelessWindowHint|Qt::Tool);
     setAttribute(Qt::WA_TranslucentBackground);
     Qt::WindowFlags m_flags = windowFlags();
     setWindowFlags(m_flags|Qt::WindowStaysOnTopHint);
-    pet_appearance=new QLabel(this);
-    SelectAppearance();
+    pet_displayed_label=new QLabel(this);
+    pet_displayed_label->resize(175,150);
+    pet_displayed_label->move(125,50);
+    pet_displayed_label->setPixmap(displayed_pet_appearance.app_picture.scaled(pet_displayed_label->size()));
+    //SelectAppearance();
+    InitButton();
     m_hungerLabel = new QLabel("Hunger level: " + QString::number(m_hunger), this);
-        m_hungerLabel->hide(); // Hide the label initially
-        m_hungerLabel->setGeometry(50, 50, 150, 30);
+    m_hungerLabel->hide(); // Hide the label initially
+    m_hungerLabel->setGeometry(50, 50, 150, 30);
 
-        m_feedButton = new QPushButton("Feed pet", this);
-        m_feedButton->setGeometry(50, 100, 100, 30);
-        connect(m_feedButton, SIGNAL(clicked()), this, SLOT(showFoodList()));
+    m_feedButton = new QPushButton("Feed pet", this);
+    m_feedButton->setGeometry(50, 100, 100, 30);
+    connect(m_feedButton, SIGNAL(clicked()), this, SLOT(showFoodList()));
 
     m_hungerTimer = new QTimer(this);
     connect(m_hungerTimer, SIGNAL(timeout()), this, SLOT(increaseHunger()));
     m_hungerTimer->start(1800000); // Increase hunger every second
     m_eatingMovie = new QMovie(":/resources/motion/eating.gif");
-    m_eatingMovie->setScaledSize(pet_appearance->size());
+    m_eatingMovie->setScaledSize(pet_displayed_label->size());
     connect(m_eatingMovie, SIGNAL(finished()), this, SLOT(stopEating()));
-}
 
+    //SelectAppearance();
+    InitButton();
+}
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete pet_appearance;
+    delete pet_displayed_label;
 }
 
 
 void MainWindow::SelectAppearance(){
-    pet_appearance->resize(175,150);
-    pet_appearance->setPixmap(QPixmap(":/resources/static/default.png").scaled(pet_appearance->size()));
+    pet_displayed_label->resize(175,150);
+    pet_displayed_label->setPixmap(QPixmap(":/resources/static/default.png").scaled(pet_displayed_label->size()));
 }
 
 
@@ -132,7 +148,7 @@ void MainWindow::showFoodList()
 
 void MainWindow::startEating()
 {
-pet_appearance->setMovie(m_eatingMovie);
+pet_displayed_label->setMovie(m_eatingMovie);
 m_eatingMovie->start();
 int totalTime = m_eatingMovie->frameCount() * m_eatingMovie->nextFrameDelay();
     QTimer::singleShot(2*totalTime, this, SLOT(stopEating()));
@@ -140,5 +156,24 @@ int totalTime = m_eatingMovie->frameCount() * m_eatingMovie->nextFrameDelay();
 void MainWindow::stopEating()
 {
 m_eatingMovie->stop();
-pet_appearance->setPixmap(QPixmap(":/resources/static/default.png").scaled(pet_appearance->size()));
+pet_displayed_label->setPixmap(QPixmap(":/resources/static/default.png").scaled(pet_displayed_label->size()));
+}
+
+void MainWindow::InitButton(){
+    appchoose_btn=new QPushButton(this);
+    appchoose_btn->setIcon(QIcon(":/resources/buttons/select_appearance.png"));
+    appchoose_btn->move(1,1);
+    appchoose_btn->resize(60,60);
+    connect(appchoose_btn,&QPushButton::clicked,this,&MainWindow::OnAppChooseBtnClicked);
+}
+
+void MainWindow::OnAppearanceChanged(int label_index)
+{
+    displayed_pet_appearance=(*owned_pet_appearances)[label_index];
+    pet_displayed_label->setPixmap(displayed_pet_appearance.app_picture.scaled(pet_displayed_label->size()));
+}
+void MainWindow::OnAppChooseBtnClicked(){
+    appchoose_win=new AppChooseWindow(owned_pet_appearances);
+    connect(appchoose_win,&AppChooseWindow::AppearanceChanged,this,&MainWindow::OnAppearanceChanged);
+    appchoose_win->show();
 }
