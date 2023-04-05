@@ -18,4 +18,5 @@ struct PetAppearance{
     {}
 };
 
+
 #endif // PETOBJECTS_STRUCT_H

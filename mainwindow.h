@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QLabel>
 #include <QPushButton>
+#include <QTimer>
+#include <QMovie>
+#include <QRandomGenerator>
 
 #include "petobjects_struct.h"
 #include "appchoosewindow.h"
@@ -24,8 +27,6 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void SelectAppearance(); //切换外观
-
     void InitButton();
 
 private:
@@ -33,6 +34,9 @@ private:
 
     QVector<PetAppearance> *owned_pet_appearances;
     PetAppearance displayed_pet_appearance;
+    QVector<QString> *pet_movements;
+
+    QTimer* movement_timer;
 
     QLabel* pet_displayed_label; //外观显示Lable指针
 

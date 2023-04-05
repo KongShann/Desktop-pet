@@ -3,5 +3,9 @@
         <file>resources/static/default.png</file>
         <file>resources/buttons/select_appearance.png</file>
         <file>resources/static/default2.png</file>
+        <file>resources/movements/movement1.gif</file>
+        <file>resources/movements/movement2.gif</file>
+        <file>resources/movements/movement3.gif</file>
+        <file>resources/movements/hungry_movement.gif</file>
     </qresource>
 </RCC>
