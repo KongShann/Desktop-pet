@@ -5,6 +5,10 @@
 #include <QLabel>
 #include <QPushButton>
 #include<QTimer>
+#include<QDialog>
+#include<QVBoxLayout>
+#include<QListWidget>
+#include<QMovie>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -25,7 +29,12 @@ signals:
      void hungerChanged(int hunger);
 private slots:
       void feedPet();
-       void increaseHunger();
+      void increaseHunger();
+       void showFoodList();
+       void startEating();
+       void stopEating();
+
+
 protected:
     void enterEvent(QEvent *event) override;
     void leaveEvent(QEvent *event) override;
@@ -38,6 +47,7 @@ private:
     QPushButton* select_appearance_btn; //切换外观按钮指针
     QPushButton *m_feedButton;//喂食按钮指针
      QTimer *m_hungerTimer;//饥饿值增长指针
+     QMovie *m_eatingMovie;//宠物进食指针
 };
 #endif // MAINWINDOW_H
 
