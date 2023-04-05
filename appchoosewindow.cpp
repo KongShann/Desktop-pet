@@ -1,6 +1,7 @@
 #include "appchoosewindow.h"
 #include "ui_appchoosewindow.h"
 
+
 AppChooseWindow::AppChooseWindow(QVector<PetAppearance>* owned_pet_apps,QWidget *parent)
     :QWidget(parent)
     ,ui(new Ui::AppChooseWindow)

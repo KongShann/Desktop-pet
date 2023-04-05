@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QGridLayout>
+#include <cmath>
 
 #include "pushlabel.h"
 #include "petobjects_struct.h"
