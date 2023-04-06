@@ -33,7 +33,7 @@ public:
     void SelectAppearance(); //切换外观
     void InitButton();
     int hunger() const;
-     void setHunger(int hunger);
+    void setHunger(int hunger);
 signals:
      void hungerChanged(int hunger);
 private slots:
@@ -42,6 +42,7 @@ private slots:
        void showFoodList();
        void startEating();
        void stopEating();
+       void HungerChangeAppearance();//根据饥饿值改变宠物外观
 
 
 protected:
@@ -50,11 +51,11 @@ protected:
 
 private:
     Ui::MainWindow *ui;
-     int m_hunger;
+    int m_hunger;
     QLabel* pet_displayed_label; //外观显示Lable指针
     QLabel *m_hungerLabel;//显示饥饿值指针
     QPushButton* appchoose_btn; //切换外观按钮指针
-    QPushButton *m_feedButton;//喂食按钮指针
+    QPushButton* m_feedButton;
     QTimer *m_hungerTimer;//饥饿值增长指针
     QMovie *m_eatingMovie;//宠物进食指针
     QVector<PetAppearance> *owned_pet_appearances;

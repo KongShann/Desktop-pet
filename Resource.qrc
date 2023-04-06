@@ -7,5 +7,7 @@
         <file>resources/static/meat.png</file>
         <file>resources/static/vegetable.png</file>
         <file>resources/motion/eating.gif</file>
+        <file>resources/static/default3.png</file>
+        <file>resources/static/default4.png</file>
     </qresource>
 </RCC>

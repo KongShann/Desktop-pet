@@ -24,7 +24,8 @@ MainWindow::MainWindow(QWidget *parent)
     pet_displayed_label=new QLabel(this);
     pet_displayed_label->resize(175,150);
     pet_displayed_label->move(125,50);
-    pet_displayed_label->setPixmap(displayed_pet_appearance.app_picture.scaled(pet_displayed_label->size()));
+    HungerChangeAppearance();
+    //pet_displayed_label->setPixmap(displayed_pet_appearance.app_picture.scaled(pet_displayed_label->size()));
     //SelectAppearance();
     InitButton();
     m_hungerLabel = new QLabel("Hunger level: " + QString::number(m_hunger), this);
@@ -37,7 +38,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_hungerTimer = new QTimer(this);
     connect(m_hungerTimer, SIGNAL(timeout()), this, SLOT(increaseHunger()));
-    m_hungerTimer->start(1800000); // Increase hunger every second
+    connect(m_hungerTimer, SIGNAL(timeout()), this, SLOT(HungerChangeAppearance()));
+    m_hungerTimer->start(600000); // Increase hunger every second
     m_eatingMovie = new QMovie(":/resources/motion/eating.gif");
     m_eatingMovie->setScaledSize(pet_displayed_label->size());
     connect(m_eatingMovie, SIGNAL(finished()), this, SLOT(stopEating()));
@@ -87,6 +89,7 @@ int MainWindow::hunger() const
 void MainWindow::setHunger(int hunger)
 {
     m_hunger = hunger;
+    m_hunger = (hunger > 100) ? 100 : hunger;
     m_hungerLabel->setText("Hunger level: " + QString::number(m_hunger));
     emit hungerChanged(m_hunger);
 }
@@ -156,8 +159,9 @@ int totalTime = m_eatingMovie->frameCount() * m_eatingMovie->nextFrameDelay();
 void MainWindow::stopEating()
 {
 m_eatingMovie->stop();
-pet_displayed_label->setPixmap(QPixmap(":/resources/static/default.png").scaled(pet_displayed_label->size()));
+HungerChangeAppearance();
 }
+
 
 void MainWindow::InitButton(){
     appchoose_btn=new QPushButton(this);
@@ -176,4 +180,19 @@ void MainWindow::OnAppChooseBtnClicked(){
     appchoose_win=new AppChooseWindow(owned_pet_appearances);
     connect(appchoose_win,&AppChooseWindow::AppearanceChanged,this,&MainWindow::OnAppearanceChanged);
     appchoose_win->show();
+}
+void MainWindow::HungerChangeAppearance()
+{
+    if (m_hunger >= 60&&m_hunger<80)
+        {
+            pet_displayed_label->setPixmap(QPixmap(":/resources/static/default4.png").scaled(pet_displayed_label->size()));
+        }
+    else if(m_hunger >=80)
+        {
+        pet_displayed_label->setPixmap(QPixmap(":/resources/static/default3.png").scaled(pet_displayed_label->size()));
+        }
+    else
+        {
+        pet_displayed_label->setPixmap(displayed_pet_appearance.app_picture.scaled(pet_displayed_label->size()));
+        }
 }
