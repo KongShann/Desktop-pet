@@ -135,7 +135,7 @@ void MainWindow::increaseHunger()
 }
 
 
-/*void MainWindow::enterEvent(QEvent *event)
+void MainWindow::enterEvent(QEvent *event)
 {
     m_hungerLabel->setText("Hunger level: " + QString::number(m_hunger));
     m_hungerLabel->show();
@@ -145,7 +145,7 @@ void MainWindow::leaveEvent(QEvent *event)
 {
     m_hungerLabel->hide();
 }
-*/
+
 
 
 
