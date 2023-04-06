@@ -1,4 +1,6 @@
 #include "shopdress.h"
+#include "mainwindow.h"
+#include "petobjects_struct.h"
 #include "ui_shopdress.h"
 
 shopDress::shopDress(QWidget *parent) :
@@ -10,11 +12,8 @@ shopDress::shopDress(QWidget *parent) :
     setWindowTitle("  可爱商店喵~   ");
 
     // 初始化商品列表和价格和描述
-   m_products.resize(1);
-   m_products[0]={0,":/resources/static/default.png","0",10};
-   have_bought.resize(m_products.size());
-   have_bought={false};
-
+    init();
+    //init(std::vector<PetAppearance> products);
     // 创建商品列表控件
 
     m_productList = new QListWidget(this);
@@ -88,8 +87,8 @@ void shopDress::buyProduct()
     {
         m_balance -= price;
         m_balanceLabel->setText(QString("余额：%1").arg(m_balance));
+
         // 处理购买商品逻辑
-        have_bought[m_selectedProductId]=true;
         QMessageBox::information(this, tr("购买成功"), tr("恭喜你购买成功了捏！"));
     }
 

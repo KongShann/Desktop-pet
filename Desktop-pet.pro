@@ -18,12 +18,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     appchoosewindow.cpp \
+    foodshop.cpp \
     main.cpp \
     mainwindow.cpp \
     shopdress.cpp\
     pushlabel.cpp
 
 HEADERS += \
+    foodshop.h \
     mainwindow.h \
     shopdress.h \
     appchoosewindow.h \
@@ -31,6 +33,7 @@ HEADERS += \
     pushlabel.h
 
 FORMS += \
+    foodshop.ui \
     mainwindow.ui \
     shopdress.ui \
     appchoosewindow.ui

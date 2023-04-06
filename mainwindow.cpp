@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "shopdress.h"
+#include "foodshop.h"
+#include "ui_foodshop.h"
 #include "ui_mainwindow.h"
 
 
@@ -15,6 +17,12 @@ MainWindow::MainWindow(QWidget *parent)
     owned_pet_appearances=new QVector<PetAppearance>;
     owned_pet_appearances->push_back(PetAppearance(0,a));
     owned_pet_appearances->push_back(PetAppearance(1,b));
+
+    owned_pet_food.resize(3);
+
+    owned_pet_food.push_back(Food(0,":/resources/static/fish.png","fish",35,0,-20));
+    owned_pet_food.push_back(Food(1,":/resources/static/meat.png","meat",20,99,-10));
+    owned_pet_food.push_back(Food(2,":/resources/static/vegetable.png","vegetable",12,99,-5));
 
     displayed_pet_appearance=(*owned_pet_appearances)[1];
 
@@ -63,7 +71,7 @@ void MainWindow::gotoshop()
        click_to_dressshop=new QPushButton("装饰商店",this);
        connect(click_to_dressshop,&QPushButton::clicked,this,&MainWindow::dressshop);
        click_to_foodshop=new  QPushButton("食物商店",this);
-       connect(click_to_foodshop,&QPushButton::clicked,this,&MainWindow::foodshop);
+       connect(click_to_foodshop,&QPushButton::clicked,this,&MainWindow::shopfood);
        QVBoxLayout *layout=new QVBoxLayout(subWindow);
        layout->addWidget(click_to_dressshop);
        layout->addWidget(click_to_foodshop);
@@ -77,9 +85,9 @@ void MainWindow::dressshop()
     w.show();
     w.exec();
 }
-void MainWindow::foodshop()
+void MainWindow::shopfood()
 {
-    shopDress food;
+    foodShop food(owned_pet_food);
     food.show();
     food.exec();
 }

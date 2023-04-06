@@ -65,11 +65,11 @@ private:
     QPushButton* click_to_dressshop;//装饰商店
     QPushButton* click_to_foodshop;//食物商店
 
+    QVector<Food> owned_pet_food;//背包
 
     void gotoshop();
     void dressshop();
-    void foodshop();
-    void open_backpack();
+    void shopfood();
 };
 #endif // MAINWINDOW_H
 
