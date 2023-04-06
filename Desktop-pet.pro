@@ -33,4 +33,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     Resource.qrc
 
-DISTFILES +=
+DISTFILES += \
+    resources/dynamic/9f99e657-57ba-4668-aad9-bb921eefc4a8.gif \
+    resources/static/default.png

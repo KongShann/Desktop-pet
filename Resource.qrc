@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/static/default.png</file>
+        <file>resources/buttons/select_appearance.png</file>
+        <file>resources/static/default2.png</file>
+        <file>resources/dynamic/9f99e657-57ba-4668-aad9-bb921eefc4a8.gif</file>
+        <file>resources/dynamic/74a24300-cd1e-44a3-89be-533cf67d01ec.gif</file>
+    </qresource>
+</RCC>

@@ -26,7 +26,7 @@ private:
     Ui::MainWindow *ui;
 
     QLabel* pet_appearance; //外观显示Lable指针
-
+    QLabel* label;
     QPushButton* select_appearance_btn; //切换外观按钮指针
 
     bool m_dragging = false;

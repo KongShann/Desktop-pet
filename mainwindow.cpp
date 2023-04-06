@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include <QMovie>
+#include <cstdlib>
+#include <ctime>
+#include <QLabel>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -12,11 +15,14 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowFlags(m_flags|Qt::WindowStaysOnTopHint);
     pet_appearance=new QLabel(this);
     SelectAppearance();
+
+
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete label;
     delete pet_appearance;
 }
 void MainWindow::SelectAppearance(){
@@ -29,7 +35,22 @@ void MainWindow::mousePressEvent(QMouseEvent *event)  {
     if (event->button() == Qt::LeftButton) {
                m_dragging = true;
                m_startPos = event->globalPos() - frameGeometry().topLeft();
-                pet_appearance->setPixmap(QPixmap(":/resources/static/default2.png").scaled(pet_appearance->size()));
+               QMovie *backgroundMovie=new QMovie(this);
+
+               backgroundMovie = new QMovie(":/resources/dynamic/9f99e657-57ba-4668-aad9-bb921eefc4a8.gif",QByteArray(),this);
+               backgroundMovie->setScaledSize(pet_appearance->size());
+               connect(backgroundMovie, &QMovie::frameChanged, [=](int frameNumber){
+               if(frameNumber== backgroundMovie->frameCount() -1 )//currentFrameNumber()：获取当前帧数
+               {
+                  backgroundMovie->stop();
+                  pet_appearance->setPixmap(QPixmap(":/resources/static/default.png").scaled(pet_appearance->size()));
+               }
+               });
+               pet_appearance->setMovie(backgroundMovie);
+               backgroundMovie->start();
+
+
+     //pet_appearance->setPixmap(QPixmap(":/resources/dynamic/9f99e657-57ba-4668-aad9-bb921eefc4a8.gif").scaled(pet_appearance->size()));
            }
     }
 
@@ -37,17 +58,41 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)  {
         // 移动窗口位置
     if (m_dragging) {
                 move(event->globalPos() - m_startPos);
+                QMovie *backgroundMovie=new QMovie(this);
 
-      pet_appearance->setPixmap(QPixmap(":/resources/static/default2.png").scaled(pet_appearance->size()));
+                backgroundMovie = new QMovie(":/resources/dynamic/9f99e657-57ba-4668-aad9-bb921eefc4a8.gif",QByteArray(),this);
+                backgroundMovie->setScaledSize(pet_appearance->size());
+                connect(backgroundMovie, &QMovie::frameChanged, [=](int frameNumber){
+                if(frameNumber== backgroundMovie->frameCount() -1 )//currentFrameNumber()：获取当前帧数
+                {
+                   backgroundMovie->stop();
+                  pet_appearance->setPixmap(QPixmap(":/resources/static/default.png").scaled(pet_appearance->size()));
+                }
+                });
+                pet_appearance->setMovie(backgroundMovie);
+                backgroundMovie->start();
+
+     // pet_appearance->setPixmap(QPixmap(":/resources/dynamic/9f99e657-57ba-4668-aad9-bb921eefc4a8.gif").scaled(pet_appearance->size()));
             }
     }
-
-
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
-    //释放窗口
   {
       if (event->button() == Qt::LeftButton) {
           m_dragging = false;
-           pet_appearance->setPixmap(QPixmap(":/resources/static/default.png").scaled(pet_appearance->size()));
+          QMovie *backgroundMovie=new QMovie(this);
+
+          backgroundMovie = new QMovie(":/resources/dynamic/9f99e657-57ba-4668-aad9-bb921eefc4a8.gif",QByteArray(),this);
+          backgroundMovie->setScaledSize(pet_appearance->size());
+          connect(backgroundMovie, &QMovie::frameChanged, [=](int frameNumber){
+          if(frameNumber== backgroundMovie->frameCount() -1 )//currentFrameNumber()：获取当前帧数
+          {
+             backgroundMovie->stop();
+             pet_appearance->setPixmap(QPixmap(":/resources/static/default.png").scaled(pet_appearance->size()));
+          }
+          });
+          pet_appearance->setMovie(backgroundMovie);
+          backgroundMovie->start();
+
+         // pet_appearance->setPixmap(QPixmap(":/resources/static/default.png").scaled(pet_appearance->size()));
       }
-}
+  }
