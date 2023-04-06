@@ -32,7 +32,7 @@ shopDress::shopDress(QWidget *parent) :
         m_selectedProductId = row;
         m_productNameLabel->setText(m_products[m_selectedProductId]);
         m_productDescLabel->setText("这是" + m_productDesc[m_selectedProductId] + " 品质");
-        m_productPriceLabel->setText(QString("价格：%1").arg(m_productPrices[m_selectedProductId]));
+        m_productPriceLabel->setText(QString("价格 %1").arg(m_productPrices[m_selectedProductId]));
     });
 
        // 创建商品名称、描述和价格标签
@@ -42,7 +42,7 @@ shopDress::shopDress(QWidget *parent) :
 
        // 创建余额标签
        m_balance = 100;
-       m_balanceLabel = new QLabel(QString("余额：%1").arg(m_balance), this);
+       m_balanceLabel = new QLabel(QString("余额 %1").arg(100), this);
 
        //创建预览按钮
        m_viewButton=new QPushButton("预览商品信息",this);
