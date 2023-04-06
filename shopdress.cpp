@@ -1,5 +1,4 @@
 #include "shopdress.h"
-#include "m_petbackpack.h"
 #include "ui_shopdress.h"
 
 shopDress::shopDress(QWidget *parent) :
@@ -99,27 +98,7 @@ void shopDress::buyProduct()
         QMessageBox::warning(this, tr("购买失败"), tr("对不起，您的余额不足，请接着打工喵！"));
     }
 }
-void shopDress::packlogic()
-{
-    m_petbackpack backpack;
-    backpack.m_backpack.resize(m_products.size());
-    if(have_bought[m_selectedProductId])
-    {
-        backpack.m_backpack[m_selectedProductId].app_id=m_products[m_selectedProductId].app_id;
-        backpack.m_backpack[m_selectedProductId].app_name=m_products[m_selectedProductId].app_name;
-        backpack.m_backpack[m_selectedProductId].app_picture=m_products[m_selectedProductId].app_picture;
-        backpack.m_backpack[m_selectedProductId].app_price=m_products[m_selectedProductId].app_price;
-    }
 
-    backpack.m_backpackList=new QListWidget (this);
-    for (int it=0; it < backpack.m_backpack.size(); ++it)
-    {
-         backpack.m_backpackList->addItem(backpack.m_backpack[it].app_name);
-    }
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    mainLayout->addWidget(backpack.m_backpackList);
-
-}
 shopDress::~shopDress()
 {
     delete ui;

@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "shopdress.h"
-#include "m_petbackpack.h"
 #include "ui_mainwindow.h"
 
 
@@ -27,9 +26,8 @@ MainWindow::MainWindow(QWidget *parent)
     click_to_shopButton=new QPushButton("shop",this);
     connect(click_to_shopButton,&QPushButton::clicked,this,&MainWindow::gotoshop);
 
-    click_to_backpackbtn=new QPushButton("进入背包",this);
-    connect(click_to_backpackbtn,&QPushButton::clicked,this,&MainWindow::open_backpack);
-    click_to_backpackbtn->setGeometry(50, 50, 150, 30);
+
+
     pet_displayed_label=new QLabel(this);
     pet_displayed_label->resize(175,150);
     pet_displayed_label->move(125,50);
@@ -72,11 +70,7 @@ void MainWindow::gotoshop()
        subWindow->show();
 }
 
-void MainWindow::open_backpack()
-{
-    shopDress m;
-    m.packlogic();
-}
+
 void MainWindow::dressshop()
 {
     shopDress w;
