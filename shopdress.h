@@ -22,12 +22,15 @@ class shopDress : public QDialog
 
 public:
     explicit shopDress(QWidget *parent = nullptr);
+    void packlogic();
     ~shopDress();
+
 
 private:
     void createProductList();
     void createProductDetail();
     QListWidget *m_productList;
+
     std::vector<PetAppearance> m_products;
 
 
@@ -39,13 +42,18 @@ private:
     QPushButton *m_buyButton;
     QPushButton *m_viewButton;
 
+    std::vector<bool> have_bought;
 
     int m_selectedProductId;
     int m_balance;
     Ui::shopDress *ui;
+
+
 private slots:
     void buyProduct();
     void viewProduct();
+
+
 };
 
 

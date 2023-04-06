@@ -1,4 +1,5 @@
-QT       += core gui
+QT       += core gui \
+    quick
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,12 +18,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     appchoosewindow.cpp \
+    m_petbackpack.cpp \
     main.cpp \
     mainwindow.cpp \
     shopdress.cpp\
     pushlabel.cpp
 
 HEADERS += \
+    m_petbackpack.h \
     mainwindow.h \
     shopdress.h \
     appchoosewindow.h \
@@ -30,6 +33,7 @@ HEADERS += \
     pushlabel.h
 
 FORMS += \
+    m_petbackpack.ui \
     mainwindow.ui \
     shopdress.ui \
     appchoosewindow.ui

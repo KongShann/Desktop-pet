@@ -46,8 +46,8 @@ private slots:
 
 
 protected:
-   void enterEvent(QEvent *event) override;
-   void leaveEvent(QEvent *event) override;
+   //void enterEvent(QEvent *event) override;
+   //void leaveEvent(QEvent *event) override;
 
 private:
     Ui::MainWindow *ui;
@@ -62,8 +62,14 @@ private:
     PetAppearance displayed_pet_appearance;
     AppChooseWindow* appchoose_win; //切换外观窗口
     QPushButton* click_to_shopButton;//进入商店按扭
+    QPushButton* click_to_dressshop;//装饰商店
+    QPushButton* click_to_foodshop;//食物商店
+    QPushButton* click_to_backpackbtn;//打开背包
 
     void gotoshop();
+    void dressshop();
+    void foodshop();
+    void open_backpack();
 };
 #endif // MAINWINDOW_H
 

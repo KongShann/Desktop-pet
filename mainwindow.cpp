@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "shopdress.h"
+#include "m_petbackpack.h"
 #include "ui_mainwindow.h"
 
 
@@ -26,6 +27,9 @@ MainWindow::MainWindow(QWidget *parent)
     click_to_shopButton=new QPushButton("shop",this);
     connect(click_to_shopButton,&QPushButton::clicked,this,&MainWindow::gotoshop);
 
+    click_to_backpackbtn=new QPushButton("进入背包",this);
+    connect(click_to_backpackbtn,&QPushButton::clicked,this,&MainWindow::open_backpack);
+    click_to_backpackbtn->setGeometry(50, 50, 150, 30);
     pet_displayed_label=new QLabel(this);
     pet_displayed_label->resize(175,150);
     pet_displayed_label->move(125,50);
@@ -56,9 +60,34 @@ MainWindow::~MainWindow()
 }
 void MainWindow::gotoshop()
 {
-    shopDress shop;
-    shop.show();
-    shop.exec();
+       QDialog *subWindow=new QDialog(this);
+       subWindow->setWindowTitle("可爱商店喵~");
+       click_to_dressshop=new QPushButton("装饰商店",this);
+       connect(click_to_dressshop,&QPushButton::clicked,this,&MainWindow::dressshop);
+       click_to_foodshop=new  QPushButton("食物商店",this);
+       connect(click_to_foodshop,&QPushButton::clicked,this,&MainWindow::foodshop);
+       QVBoxLayout *layout=new QVBoxLayout(subWindow);
+       layout->addWidget(click_to_dressshop);
+       layout->addWidget(click_to_foodshop);
+       subWindow->show();
+}
+
+void MainWindow::open_backpack()
+{
+    shopDress m;
+    m.packlogic();
+}
+void MainWindow::dressshop()
+{
+    shopDress w;
+    w.show();
+    w.exec();
+}
+void MainWindow::foodshop()
+{
+    shopDress food;
+    food.show();
+    food.exec();
 }
 void MainWindow::feedPet()
 {
@@ -69,11 +98,14 @@ void MainWindow::feedPet()
        QString foodType = selectedItem->text();
 
        // Reduce the hunger level based on the food type
-       if (foodType == "Fish") {
+       if (foodType == "Fish")
+       {
            setHunger(m_hunger - 10);
-       } else if (foodType == "Meat") {
+       } else if (foodType == "Meat")
+       {
            setHunger(m_hunger - 20);
-       } else if (foodType == "Vegetables") {
+       } else if (foodType == "Vegetables")
+       {
            setHunger(m_hunger - 5);
        }
        m_hunger = qMax(m_hunger, 0);
@@ -101,7 +133,7 @@ void MainWindow::increaseHunger()
 }
 
 
-void MainWindow::enterEvent(QEvent *event)
+/*void MainWindow::enterEvent(QEvent *event)
 {
     m_hungerLabel->setText("Hunger level: " + QString::number(m_hunger));
     m_hungerLabel->show();
@@ -111,6 +143,7 @@ void MainWindow::leaveEvent(QEvent *event)
 {
     m_hungerLabel->hide();
 }
+*/
 
 
 
@@ -175,7 +208,8 @@ void MainWindow::OnAppearanceChanged(int label_index)
     displayed_pet_appearance=(*owned_pet_appearances)[label_index];
     pet_displayed_label->setPixmap(displayed_pet_appearance.app_picture.scaled(pet_displayed_label->size()));
 }
-void MainWindow::OnAppChooseBtnClicked(){
+void MainWindow::OnAppChooseBtnClicked()
+{
     appchoose_win=new AppChooseWindow(owned_pet_appearances);
     connect(appchoose_win,&AppChooseWindow::AppearanceChanged,this,&MainWindow::OnAppearanceChanged);
     appchoose_win->show();
