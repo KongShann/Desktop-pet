@@ -9,30 +9,21 @@ shopDress::shopDress(QWidget *parent) :
     setWindowTitle("  可爱商店喵~   ");
 
     // 初始化商品列表和价格和描述
-    m_products.insert(0, "0");
-    m_products.insert(1, "1");
-    m_products.insert(2, "2");
-    m_products.insert(3,"3");
-    m_productPrices.insert(0, 5.0);
-    m_productPrices.insert(1, 10.0);
-    m_productPrices.insert(2, 15.0);
-    m_productPrices.insert(3, 50.0);
-    m_productDesc.insert(0,"精品");
-    m_productDesc.insert(1,"黄金");
-    m_productDesc.insert(2,"钻石");
-    m_productDesc.insert(3, "RED");
+   m_products.resize(1);
+   m_products[0]={0,":/resources/static/default.png","0",10};
+
+
     // 创建商品列表控件
     m_productList = new QListWidget(this);
-    for (auto it = m_products.begin(); it != m_products.end(); ++it)
+    for (int it=0; it < m_products.size(); ++it)
     {
-        m_productList->addItem(it.value());
+        m_productList->addItem(m_products[it].app_name);
     }
     connect(m_productList, &QListWidget::currentRowChanged, [=](int row)
     {
-        m_selectedProductId = row;
-        m_productNameLabel->setText(m_products[m_selectedProductId]);
-        m_productDescLabel->setText("这是" + m_productDesc[m_selectedProductId] + " 品质");
-        m_productPriceLabel->setText(QString("价格 %1").arg(m_productPrices[m_selectedProductId]));
+        m_selectedProductId=row;
+        m_productNameLabel->setText(m_products[ m_selectedProductId].app_name);
+        m_productPriceLabel->setText(QString("价格 %1").arg(m_products[ m_selectedProductId].app_price));
     });
 
        // 创建商品名称、描述和价格标签
@@ -80,7 +71,8 @@ public:
 void shopDress::viewProduct()
 {
 
-    QImage img(":/"+m_products[m_selectedProductId]+".jpg");
+    QPixmap pixmap=m_products[m_selectedProductId].app_picture;
+    QImage img=pixmap.toImage();
     ImageDialog *dialog=new ImageDialog(img,this);
     dialog->exec();
 
@@ -88,7 +80,7 @@ void shopDress::viewProduct()
 
 void shopDress::buyProduct()
 {
-    double price = m_productPrices[m_selectedProductId] ;
+    double price = m_products[m_selectedProductId].app_price ;
     if (m_balance >= price)
     {
         m_balance -= price;

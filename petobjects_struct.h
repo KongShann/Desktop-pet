@@ -3,7 +3,8 @@
 
 #include <QPixmap>
 
-struct PetAppearance{
+struct PetAppearance
+{
     int app_id;
     int app_price;
     QPixmap app_picture;
