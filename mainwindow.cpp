@@ -4,8 +4,8 @@
 
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), m_hunger(50)
-    , ui(new Ui::MainWindow)
+    : QMainWindow(parent), ui(new Ui::MainWindow)
+    , m_hunger(50)
 {    
     ui->setupUi(this);
 
