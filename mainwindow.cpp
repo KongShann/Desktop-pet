@@ -43,42 +43,18 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)  {
 
     if ((event->buttons() & Qt::LeftButton) && !m_isDragging)
     {
-//m_dragStartPosition = event->globalPos();
-        QPoint dragDistance = event->pos() - m_dragStartPosition;
-        if (dragDistance.manhattanLength()> QApplication::startDragDistance()) // 如果鼠标移动距离超过一定阈值，认为开始拖拽操作
+        QPoint dragDistance = event->globalPos() - m_dragStartPosition;
+        if (dragDistance.manhattanLength()> QApplication::startDragDistance())
         {
-            m_isDragging = true; //设置拖拽状态为是
-            //QPoint globalPos = mapToGlobal(event->pos());
-                      // QPoint dragDirection = dragDistance;//.normalized();
-                       //move(globalPos - dragDirection);
-                      // m_dragStartPosition = event->pos();
-            //下面是你的代码，应该是用来播放动画和调整位置的
-           // QPoint diff = event->globalPos() - m_startPos; //我猜m_startPos应该和m_dragStartPosition的作用是一样的？我没有找到m_startPos是在哪里定义的
+           m_isDragging = true; //设置拖拽状态为是
+           QPoint diff = event->globalPos() - m_dragStartPosition;
+           move(diff);
 
-              //  move(diff);
-            //Qt::WindowFlags m_flags = windowFlags();
-            //setWindowFlags(m_flags|Qt::WindowStaysOnTopHint);
-           /* if (dragDistance.x() > 0) {
-                          m_flags &= ~Qt::LeftToRight;
-                         // m_flags |=  Qt::RightToLeft;
-                       } else if (dragDistance.x() < 0) {
-                          m_flags &= ~Qt::RightToLeft;
-                           //m_flags |= Qt::LeftToRight;
-                       }
-                       if (dragDistance.y() > 0) {
-                           //m_flags &= ~Qt::TopToBottom;
-                           //flags |= Qt::BottomToTop;
-                       } else if (dragDistance.y() < 0) {
-                           //m_flags &= ~Qt::BottomToTop;
-                           //flags |= Qt::TopToBottom;
-                       }*/
-         move(event ->pos() + dragDistance);
-                QMovie* backgroundMovie = new QMovie(this);
-
-                backgroundMovie = new QMovie(":/resources/dynamic/9f99e657-57ba-4668-aad9-bb921eefc4a8.gif", QByteArray(), this);
-                backgroundMovie->setScaledSize(pet_appearance->size());
-                connect(backgroundMovie, &QMovie::frameChanged, [=](int frameNumber) {
-                    if (frameNumber == backgroundMovie->frameCount() - 1)//currentFrameNumber()：获取当前帧数
+           QMovie* backgroundMovie = new QMovie(this);
+           backgroundMovie = new QMovie(":/resources/dynamic/9f99e657-57ba-4668-aad9-bb921eefc4a8.gif", QByteArray(), this);
+           backgroundMovie->setScaledSize(pet_appearance->size());
+            connect(backgroundMovie, &QMovie::frameChanged, [=](int frameNumber) {
+                if (frameNumber == backgroundMovie->frameCount() - 1)//currentFrameNumber()：获取当前帧数
                     {
                         backgroundMovie->stop();
                         pet_appearance->setPixmap(QPixmap(":/resources/static/default.png").scaled(pet_appearance->size()));
@@ -88,16 +64,21 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)  {
             backgroundMovie->start();
         }
     }
+    else if((event->buttons() & Qt::LeftButton) && m_isDragging)
+    {
+        QPoint diff = event->globalPos() - m_dragStartPosition;
+        move(diff);
+    }
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent* event)
 {
-    if (event->button() == Qt::LeftButton && m_isDragging) {//从拖拽状态结束左键按压
+    if (event->button() == Qt::LeftButton && m_isDragging) {
         // 结束拖拽操作
         m_isDragging = false;
+        // 这里结束循环，并且停止播放
     }
-    else if (event->button() == Qt::LeftButton && !m_isDragging) {//非从拖拽状态结束左键按压
-        //应该是播放单击动画的代码
+    else if (event->button() == Qt::LeftButton && !m_isDragging) {
         QMovie* backgroundMovie = new QMovie(this);
         srand((int)time(0));
         int i = rand() % 12;
@@ -106,10 +87,10 @@ void MainWindow::mouseReleaseEvent(QMouseEvent* event)
         backgroundMovie->setScaledSize(pet_appearance->size());
         connect(backgroundMovie, &QMovie::frameChanged, [=](int frameNumber) {
             if (frameNumber == backgroundMovie->frameCount() - 1)//currentFrameNumber()：获取当前帧数
-            {
-                backgroundMovie->stop();
-                pet_appearance->setPixmap(QPixmap(":/resources/static/default.png").scaled(pet_appearance->size()));
-            }
+                {
+                    backgroundMovie->stop();
+                    pet_appearance->setPixmap(QPixmap(":/resources/static/default.png").scaled(pet_appearance->size()));
+                }
             });
         pet_appearance->setMovie(backgroundMovie);
         backgroundMovie->start();

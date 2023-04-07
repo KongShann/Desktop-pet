@@ -33,7 +33,6 @@ private:
     QPushButton* select_appearance_btn; //切换外观按钮指针
 
     QPoint m_dragStartPosition;
-    QPoint m_startPos;//记录鼠标位置
      QPoint diff;
     bool  m_isDragging;
 };
