@@ -9,6 +9,7 @@
 #include <QVBoxLayout>
 #include <QListWidget>
 #include <QMovie>
+
 #include "petobjects_struct.h"
 #include "appchoosewindow.h"
 
@@ -35,8 +36,9 @@ public:
     int hunger() const;
     void setHunger(int hunger);
 signals:
-     void hungerChanged(int hunger);
+    void hungerChanged(int hunger);
 private slots:
+
       void feedPet();
       void increaseHunger();
        void showFoodList();
@@ -44,14 +46,13 @@ private slots:
        void stopEating();
        void HungerChangeAppearance();//根据饥饿值改变宠物外观
 
-
 protected:
-    void enterEvent(QEvent *event) override;
-    void leaveEvent(QEvent *event) override;
+   void enterEvent(QEvent *event) override;
+   void leaveEvent(QEvent *event) override;
 
 private:
     Ui::MainWindow *ui;
-    int m_hunger;
+    int m_hunger;//饥饿值
     QLabel* pet_displayed_label; //外观显示Lable指针
     QLabel *m_hungerLabel;//显示饥饿值指针
     QPushButton* appchoose_btn; //切换外观按钮指针
@@ -61,7 +62,19 @@ private:
     QVector<PetAppearance> *owned_pet_appearances;
     PetAppearance displayed_pet_appearance;
     AppChooseWindow* appchoose_win; //切换外观窗口
+    QPushButton* click_to_shopButton;//进入商店按扭
+    QPushButton* click_to_dressshop;//装饰商店
+    QPushButton* click_to_foodshop;//食物商店
 
+    QVector<Food> *owned_pet_food;//背包
+    QVector<PetAppearance> *notowned_pet_appearances;//外观未用有'
+    QVector<int> *point;//余额
+
+    void gotoshop();
+    void dressshop();
+    void shopfood();
+    void closeShopCenterAndOpenDressshop();
+    void closeShopCenterAndOpenFoodshop();
 };
 #endif // MAINWINDOW_H
 

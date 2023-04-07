@@ -1,4 +1,5 @@
-QT       += core gui
+QT       += core gui \
+    quick
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,19 +18,25 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     appchoosewindow.cpp \
+    foodshop.cpp \
     main.cpp \
     mainwindow.cpp \
+    shopdress.cpp\
     pushlabel.cpp
 
 HEADERS += \
-    appchoosewindow.h \
+    foodshop.h \
     mainwindow.h \
+    shopdress.h \
+    appchoosewindow.h \
     petobjects_struct.h \
     pushlabel.h
 
 FORMS += \
-    appchoosewindow.ui \
-    mainwindow.ui
+    foodshop.ui \
+    mainwindow.ui \
+    shopdress.ui \
+    appchoosewindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
