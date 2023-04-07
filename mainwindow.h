@@ -1,5 +1,8 @@
+﻿
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+
 
 #include <QMainWindow>
 #include <QLabel>
@@ -7,9 +10,11 @@
 #include <QTimer>
 #include <QMovie>
 #include <QRandomGenerator>
+#include <QMouseEvent>
 
 #include "petobjects_struct.h"
 #include "appchoosewindow.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -27,16 +32,21 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void InitButton();
+    void InitButton(); //初始化按钮
+
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent* event); //用于实现单击和拖动事件处理
+
 
 private:
     Ui::MainWindow *ui;
 
-    QVector<PetAppearance> *owned_pet_appearances;
-    PetAppearance displayed_pet_appearance;
-    QVector<QString> *pet_movements;
+    QVector<PetAppearance> *owned_pet_appearances; //已拥有的宠物外观
+    PetAppearance displayed_pet_appearance;//正在显示的外观
+    QVector<QString> *pet_movements;//宠物动作动画文件路径数组指针
 
-    QTimer* movement_timer;
+    QTimer* petmovement_timer;//宠物动作计时器
 
     QLabel* pet_displayed_label; //外观显示Lable指针
 
@@ -44,6 +54,9 @@ private:
 
     AppChooseWindow* appchoose_win; //切换外观窗口
 
-signals:
+    QPoint petlabel_dragstartposition;//显示窗口开始被拖拽时的位置
+    bool  petlabel_isdragging;//显示窗口是否被拖拽
+
 };
 #endif // MAINWINDOW_H
+
