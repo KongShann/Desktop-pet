@@ -21,21 +21,8 @@ class shopDress : public QDialog
 
 
 public:
-    explicit shopDress(QWidget *parent = nullptr);
-    void init(std::vector<PetAppearance> products)
-    {
-        m_products.resize(products.size());
-        for(int i=0;i<products.size();++i)
-        {
-            m_products[i]=products[i];
-        }
-    }
-    void init()
-    {
-        m_products.resize(1);
-        m_products[0]={0,":/resources/static/default.png","0",10};
-    }
-    ~shopDress();
+    explicit shopDress(QVector<PetAppearance> *owned_pet_appearances,QVector<PetAppearance> *notowned_pet_appearances,QWidget *parent = nullptr);
+
 
 
 private:
@@ -53,8 +40,8 @@ private:
     QLabel *m_productIconLabel;
     QPushButton *m_buyButton;
     QPushButton *m_viewButton;
-
-
+    QVector<PetAppearance> *notowned_pet_appearances_;//数据成员
+    QVector<PetAppearance> *owned_pet_appearances_;//数据成员
     int m_selectedProductId;
     int m_balance;
     Ui::shopDress *ui;

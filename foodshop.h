@@ -19,8 +19,8 @@ class foodShop : public QDialog
     Q_OBJECT
 
 public:
-    explicit foodShop(QVector<Food> owned_pet_food,QWidget *parent = nullptr);
-     QVector<Food> owned_pet_food_;//数据成员
+    explicit foodShop(QVector<Food> *owned_pet_food,QWidget *parent = nullptr);
+
     ~foodShop();
 private:
     void createProductList();
@@ -38,7 +38,7 @@ private:
     QPushButton *m_buyButton;
     QPushButton *m_viewButton;
 
-
+    QVector<Food> *owned_pet_food_;//数据成员
 
     int m_selectedProductId;
     int m_balance;

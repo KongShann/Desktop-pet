@@ -46,8 +46,8 @@ private slots:
 
 
 protected:
-   void enterEvent(QEvent *event) override;
-   void leaveEvent(QEvent *event) override;
+   //void enterEvent(QEvent *event) override;
+   //void leaveEvent(QEvent *event) override;
 
 private:
     Ui::MainWindow *ui;
@@ -65,11 +65,14 @@ private:
     QPushButton* click_to_dressshop;//装饰商店
     QPushButton* click_to_foodshop;//食物商店
 
-    QVector<Food> owned_pet_food;//背包
+    QVector<Food> *owned_pet_food;//背包
+    QVector<PetAppearance> *notowned_pet_appearances;//外观未用有
 
     void gotoshop();
     void dressshop();
     void shopfood();
+    void closeShopCenterAndOpenDressshop();
+    void closeShopCenterAndOpenFoodshop();
 };
 #endif // MAINWINDOW_H
 

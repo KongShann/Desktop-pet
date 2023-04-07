@@ -15,14 +15,19 @@ MainWindow::MainWindow(QWidget *parent)
     QString b= ":/resources/static/default2.png";
 
     owned_pet_appearances=new QVector<PetAppearance>;
-    owned_pet_appearances->push_back(PetAppearance(0,a));
-    owned_pet_appearances->push_back(PetAppearance(1,b));
+    owned_pet_appearances->push_back(PetAppearance(2,a,"aa",20));
+    owned_pet_appearances->push_back(PetAppearance(3,b,"BB",120));
 
-    owned_pet_food.resize(3);
+    notowned_pet_appearances=new QVector<PetAppearance>;
+//    notowned_pet_appearances->resize(2);
+    notowned_pet_appearances->push_back(PetAppearance(0,a,"a",10));
+    notowned_pet_appearances->push_back(PetAppearance(1,b,"B",10));
 
-    owned_pet_food.push_back(Food(0,":/resources/static/fish.png","fish",35,0,-20));
-    owned_pet_food.push_back(Food(1,":/resources/static/meat.png","meat",20,99,-10));
-    owned_pet_food.push_back(Food(2,":/resources/static/vegetable.png","vegetable",12,99,-5));
+
+    owned_pet_food=new QVector<Food>;
+    owned_pet_food->push_back(Food(0,":/resources/static/fish.png","fish",35,0,-20));
+    owned_pet_food->push_back(Food(1,":/resources/static/meat.png","meat",20,0,-10));
+    owned_pet_food->push_back(Food(2,":/resources/static/vegetable.png","vegetable",12,0,-5));
 
     displayed_pet_appearance=(*owned_pet_appearances)[1];
 
@@ -40,7 +45,6 @@ MainWindow::MainWindow(QWidget *parent)
     pet_displayed_label->resize(175,150);
     pet_displayed_label->move(125,50);
     pet_displayed_label->setPixmap(displayed_pet_appearance.app_picture.scaled(pet_displayed_label->size()));
-    InitButton();
 
     m_hungerLabel = new QLabel("Hunger level: " + QString::number(m_hunger), this);
     m_hungerLabel->hide(); // Hide the label initially
@@ -66,22 +70,37 @@ MainWindow::~MainWindow()
 }
 void MainWindow::gotoshop()
 {
-       QDialog *subWindow=new QDialog(this);
-       subWindow->setWindowTitle("可爱商店喵~");
+       QDialog *shopCenter=new QDialog(this);
+       shopCenter->setWindowTitle("可爱商店喵~");
        click_to_dressshop=new QPushButton("装饰商店",this);
-       connect(click_to_dressshop,&QPushButton::clicked,this,&MainWindow::dressshop);
+       connect(click_to_dressshop, &QPushButton::clicked, this, &MainWindow::closeShopCenterAndOpenDressshop);
        click_to_foodshop=new  QPushButton("食物商店",this);
-       connect(click_to_foodshop,&QPushButton::clicked,this,&MainWindow::shopfood);
-       QVBoxLayout *layout=new QVBoxLayout(subWindow);
+       connect(click_to_foodshop, &QPushButton::clicked, this, &MainWindow::closeShopCenterAndOpenFoodshop);
+       QVBoxLayout *layout=new QVBoxLayout(shopCenter);
        layout->addWidget(click_to_dressshop);
        layout->addWidget(click_to_foodshop);
-       subWindow->show();
+       shopCenter->show();
+
 }
+void MainWindow::closeShopCenterAndOpenDressshop()
+{
+    QDialog* dialog = qobject_cast<QDialog*>(sender()->parent());
+    dialog->close();
 
+    // 打开装饰商店窗口的代码
+    dressshop();
+}
+void MainWindow::closeShopCenterAndOpenFoodshop()
+{
+    QDialog* dialog = qobject_cast<QDialog*>(sender()->parent());
+    dialog->close();
 
+    // 打开装饰商店窗口的代码
+    shopfood();
+}
 void MainWindow::dressshop()
 {
-    shopDress w;
+    shopDress w(owned_pet_appearances,notowned_pet_appearances);
     w.show();
     w.exec();
 }
@@ -135,7 +154,7 @@ void MainWindow::increaseHunger()
 }
 
 
-void MainWindow::enterEvent(QEvent *event)
+/*void MainWindow::enterEvent(QEvent *event)
 {
     m_hungerLabel->setText("Hunger level: " + QString::number(m_hunger));
     m_hungerLabel->show();
@@ -145,6 +164,7 @@ void MainWindow::leaveEvent(QEvent *event)
 {
     m_hungerLabel->hide();
 }
+*/
 
 
 

@@ -3,17 +3,20 @@
 #include "petobjects_struct.h"
 #include "ui_shopdress.h"
 
-shopDress::shopDress(QWidget *parent) :
-    QDialog(parent),
+shopDress::shopDress(QVector<PetAppearance> *owned_pet_appearances,QVector<PetAppearance> *notowned_pet_appearances,QWidget *parent) :
+    QDialog(parent),notowned_pet_appearances_(notowned_pet_appearances),owned_pet_appearances_(owned_pet_appearances),
     ui(new Ui::shopDress)
 {
     ui->setupUi(this);
 
-    setWindowTitle("  可爱商店喵~   ");
+    setWindowTitle("   可爱商店喵~   ");
 
     // 初始化商品列表和价格和描述
-    init();
-    //init(std::vector<PetAppearance> products);
+
+    for(int i=0;i<notowned_pet_appearances_->size();i++)
+    {
+        m_products.push_back((*notowned_pet_appearances_)[i]);
+    }
     // 创建商品列表控件
 
     m_productList = new QListWidget(this);
@@ -82,14 +85,17 @@ void shopDress::viewProduct()
 
 void shopDress::buyProduct()
 {
+
     double price = m_products[m_selectedProductId].app_price ;
     if (m_balance >= price)
     {
         m_balance -= price;
         m_balanceLabel->setText(QString("余额：%1").arg(m_balance));
-
+        owned_pet_appearances_->push_back(m_products[m_selectedProductId]);
+        notowned_pet_appearances_->erase(notowned_pet_appearances_->begin()+m_selectedProductId);
         // 处理购买商品逻辑
         QMessageBox::information(this, tr("购买成功"), tr("恭喜你购买成功了捏！"));
+        this->close();
     }
 
      else {
@@ -98,8 +104,4 @@ void shopDress::buyProduct()
     }
 }
 
-shopDress::~shopDress()
-{
-    delete ui;
-}
 

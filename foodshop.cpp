@@ -1,7 +1,7 @@
 #include "foodshop.h"
 #include "ui_foodshop.h"
 
-foodShop::foodShop(QVector<Food> owned_pet_food,QWidget *parent) :
+foodShop::foodShop(QVector<Food> *owned_pet_food,QWidget *parent) :
     QDialog(parent),owned_pet_food_(owned_pet_food),
     ui(new Ui::foodShop)
 
@@ -13,10 +13,10 @@ setWindowTitle("  可爱商店喵~   ");
 
 // 初始化商品列表和价格和描述
 
-   m_products.resize(3);
-   m_products[0]={0,":/resources/static/fish.png","fish",35,99,-20};
-   m_products[1]={1,":/resources/static/meat.png","meat",20,99,-10};
-   m_products[2]={2,":/resources/static/vegetable.png","vegetable",12,99,-5};
+for(int i=0;i<owned_pet_food_->size();i++)
+{
+    m_products.push_back((*owned_pet_food_)[i]);
+}
    m_productList = new QListWidget(this);
 for (int it=0; it < m_products.size(); ++it)
 {
@@ -90,7 +90,8 @@ if (m_balance >= price)
     m_balance -= price;
     m_balanceLabel->setText(QString("余额：%1").arg(m_balance));
     // 处理购买商品逻辑
-    owned_pet_food_[m_selectedProductId].m_number++;
+   (*owned_pet_food_)[m_selectedProductId].m_number++;
+
     QMessageBox::information(this, tr("购买成功"), tr("恭喜你购买成功了捏！"));
 }
 
