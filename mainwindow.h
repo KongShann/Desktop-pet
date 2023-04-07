@@ -33,7 +33,7 @@ private:
     QPushButton* select_appearance_btn; //切换外观按钮指针
 
     QPoint m_dragStartPosition;
-     QPoint diff;
+    QPoint diff;
     bool  m_isDragging;
 };
 #endif // MAINWINDOW_H
