@@ -1,4 +1,5 @@
-QT       += core gui
+QT       += core gui \
+    quick
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,12 +18,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     appchoosewindow.cpp \
+    foodshop.cpp \
     main.cpp \
     mainwindow.cpp \
     shopdress.cpp\
     pushlabel.cpp
 
 HEADERS += \
+    foodshop.h \
     mainwindow.h \
     shopdress.h \
     appchoosewindow.h \
@@ -30,6 +33,7 @@ HEADERS += \
     pushlabel.h
 
 FORMS += \
+    foodshop.ui \
     mainwindow.ui \
     shopdress.ui \
     appchoosewindow.ui
@@ -43,3 +47,6 @@ RESOURCES += \
     Resource.qrc
 
 DISTFILES +=
+
+QMAKE_CXXFLAGS += /source-charset:utf-8 /execution-charset:utf-8
+

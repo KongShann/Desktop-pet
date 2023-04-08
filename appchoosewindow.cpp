@@ -6,6 +6,7 @@ AppChooseWindow::AppChooseWindow(QVector<PetAppearance>* owned_pet_apps,QWidget 
     :QWidget(parent)
     ,ui(new Ui::AppChooseWindow)
     ,owned_pet_apps(owned_pet_apps)
+    ,label_index_(-1)
 {
     ui->setupUi(this);
     gridlayout=new QGridLayout(ui->scrollAreaWidgetContents);

@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QMap>
 
+#include "petobjects_struct.h"
 
 namespace Ui {
 class shopDress;
@@ -20,17 +21,17 @@ class shopDress : public QDialog
 
 
 public:
-    explicit shopDress(QWidget *parent = nullptr);
-    ~shopDress();
+    explicit shopDress(QVector<PetAppearance> *owned_pet_appearances,QVector<PetAppearance> *notowned_pet_appearances,QVector<int> *m_point,QWidget *parent = nullptr);
+
+
 
 private:
     void createProductList();
     void createProductDetail();
     QListWidget *m_productList;
-    QMap<int, QString> m_products; // 商品ID和名称的映射
-    QMap<int, double> m_productPrices;// 商品ID和价格的映射
-    QMap<int,QString>  m_productDesc;//商品ID和描述的映射
-    QMap<int,QPixmap> m_productsIcons;
+
+    std::vector<PetAppearance> m_products;
+
 
     QLabel *m_productNameLabel;
     QLabel *m_productDescLabel;
@@ -39,14 +40,18 @@ private:
     QLabel *m_productIconLabel;
     QPushButton *m_buyButton;
     QPushButton *m_viewButton;
-
-
+    QVector<PetAppearance> *notowned_pet_appearances_;//数据成员
+    QVector<PetAppearance> *owned_pet_appearances_;//数据成员
     int m_selectedProductId;
-    int m_balance;
+    QVector<int> *m_balance;
     Ui::shopDress *ui;
+
+
 private slots:
     void buyProduct();
     void viewProduct();
+
+
 };
 
 
