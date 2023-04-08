@@ -3,5 +3,24 @@
         <file>resources/static/default.png</file>
         <file>resources/buttons/select_appearance.png</file>
         <file>resources/static/default2.png</file>
+        <file>resources/left_mouse_click/leftclick1.gif</file>
+        <file>resources/left_mouse_click/leftclick2.gif</file>
+        <file>resources/left_mouse_click/leftclick3.gif</file>
+        <file>resources/left_mouse_click/leftclick4.gif</file>
+        <file>resources/left_mouse_click/leftclick5.gif</file>
+        <file>resources/left_mouse_click/leftclick6.gif</file>
+        <file>resources/left_mouse_click/leftclick7.gif</file>
+        <file>resources/left_mouse_click/leftclick8.gif</file>
+        <file>resources/left_mouse_click/default3.gif</file>
+        <file>resources/left_mouse_click/leftclick9.gif</file>
+        <file>resources/left_mouse_click/leftclick10.gif</file>
+        <file>resources/left_mouse_click/leftclick11.gif</file>
+        <file>resources/left_mouse_click/leftclick12.gif</file>
+        <file>resources/left_mouse_click/leftclick13.gif</file>
+        <file>resources/left_mouse_click/leftclick14.gif</file>
+        <file>resources/left_mouse_click/leftclick15.gif</file>
+        <file>resources/left_mouse_click/leftclick16.gif</file>
+        <file>resources/left_mouse_click/leftclick17.gif</file>
+        <file>resources/left_mouse_click/leftclick18.gif</file>
     </qresource>
 </RCC>
