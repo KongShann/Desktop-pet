@@ -38,4 +38,5 @@ struct Food
     {}
 };
 
+
 #endif // PETOBJECTS_STRUCT_H
