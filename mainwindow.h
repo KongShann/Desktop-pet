@@ -1,3 +1,5 @@
+
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -20,7 +22,13 @@ public:
     ~MainWindow();
     void SelectAppearance(); //切换外观
     void mousePressEvent(QMouseEvent *event);//鼠标单击实现互动
+
     //void mouseReleaseEvent(QMouseEvent *event);//释放鼠标回到之前状态
+
+    void mouseMoveEvent(QMouseEvent *event);//鼠标拖动实现互动
+    void mouseReleaseEvent(QMouseEvent* event);
+
+
 private:
     Ui::MainWindow *ui;
 
@@ -28,8 +36,15 @@ private:
 
     QPushButton* select_appearance_btn; //切换外观按钮指针
 
+
     bool m_dragging = false;
 
     QPoint m_startPos;
+
+    QPoint m_dragStartPosition;
+    QPoint diff;
+    bool  m_isDragging;
+
 };
 #endif // MAINWINDOW_H
+
