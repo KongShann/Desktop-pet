@@ -4,7 +4,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , pet_hunger(20)
+    , pet_hunger(80)
 {    
     ui->setupUi(this);
 
@@ -42,7 +42,25 @@ MainWindow::MainWindow(QWidget *parent)
     pet_displayed_label=new QLabel(this);
     pet_displayed_label->resize(175,150);
     pet_displayed_label->move(125,50);
+
+       screenedge_isattached_left = false;
+       screenedge_isattached_right= false;
+       screen_geometry = qApp->desktop()->availableGeometry(this);
+       installEventFilter(this);
+       m_petTalkLabel = new PushLabel(0,this);
+       m_petTalkLabel->setWordWrap(true);
+       m_petTalkLabel->setAlignment(Qt::AlignCenter);
+       m_petTalkLabel->setStyleSheet("background-color: transparent; border: transparent; padding: 5px;font-size: 20px;");
+       m_petTalkLabel->setGeometry(100, 0, 200, 60);
+       m_petTalkLabel->hide();
+       m_talkTimer = new QTimer(this);
+       m_talkTimer->setInterval(10000);
+       connect(m_talkTimer, &QTimer::timeout, this, &MainWindow::showPetTalk);
+       m_talkTimer->start();
+
+
     RefreshAppearance();
+    showPetTalk();
     InitPetmovementMovies();
     InitHungerSystem();
     InitButton();
@@ -77,6 +95,71 @@ void MainWindow::OnEnterAppShopBtnClicked()
     w.exec();
 }
 
+bool MainWindow::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == this && event->type() == QEvent::Move)
+    {
+        QPoint pos = this->pos();
+        int width = this->width();
+        int height = this->height();
+
+        // 如果窗口在屏幕右侧，将其吸附到屏幕右侧并隐藏所有按钮,并停止计时
+        if (pos.x() + width >= screen_geometry.width())
+        {
+            pet_displayed_label->setPixmap(QPixmap(":/resources/static/stopwall2.png").scaled(pet_displayed_label->size()));
+            this->move(screen_geometry.width() - width+50, pos.y());
+            screenedge_isattached_right = true;
+            appchoose_btn->hide();
+            feedpet_btn->hide();
+            entershop_btn->hide();
+            entergame_btn->hide();
+            m_talkTimer->stop();
+            petmovement_timer->stop();
+            pethunger_timer->stop();
+
+        }
+        else if (pos.x()-25 <= screen_geometry.x())
+        {
+            pet_displayed_label->setPixmap(QPixmap(":/resources/static/stopwall.png").scaled(pet_displayed_label->size()));
+            this->move(screen_geometry.x()-175, pos.y());
+            screenedge_isattached_left = true;
+            appchoose_btn->hide();
+            feedpet_btn->hide();
+            entershop_btn->hide();
+            entergame_btn->hide();
+            m_talkTimer->stop();
+            petmovement_timer->stop();
+            pethunger_timer->stop();
+
+        }
+
+        else if (screenedge_isattached_left||screenedge_isattached_right)
+        {
+            // 如果窗口不再靠在屏幕边缘，显示所有按钮，开始计时
+
+        QMovie* backgroundMovie = new QMovie(this);
+        backgroundMovie = new QMovie(":/resources/dynamic/mouse_dragging.gif", QByteArray(), this);
+        backgroundMovie->setScaledSize(pet_displayed_label->size());
+        pet_displayed_label->setMovie(backgroundMovie);
+        backgroundMovie->start();
+        screenedge_isattached_left = false;
+        screenedge_isattached_right=false;
+        appchoose_btn->show();
+        feedpet_btn->show();
+        entershop_btn->show();
+        entergame_btn->show();
+        m_talkTimer->start();
+        petmovement_timer->start();
+        pethunger_timer->start();
+        }
+    }
+
+    // 将事件传递给基类处理
+    return QMainWindow::eventFilter(watched, event);
+}
+
+// 实现hideAllButtons函数，用于隐藏所有窗口按钮
+
 void MainWindow::OnEnterFoodShopBtnClicked()
 {
     QDialog* dialog = qobject_cast<QDialog*>(sender()->parent());
@@ -86,7 +169,41 @@ void MainWindow::OnEnterFoodShopBtnClicked()
     food.show();
     food.exec();
 }
+void MainWindow::OnEnterGameBtnClicked()
+{
+    if(pet_hunger>hungerlevel2)
+    {
+        QMessageBox::warning(this, "提示", "你没有足够的饥饿值进行游戏！", QMessageBox::Ok);
+           return;
+    }
+    else{
+     game*Game=new game(this);
+     Game->show();
+    }
+}
+void MainWindow::showPetTalk()
+{
 
+
+
+    // 在 QLabel 中设置一段话并显示出来
+    m_petTalkLabel->setText("Hey, let's play a game!");
+    m_petTalkLabel->show();
+    petwantplay_movie = new QMovie(":/resources/motion/wantingplay.gif");
+    petwantplay_movie->setScaledSize(pet_displayed_label->size());
+    pet_displayed_label->setMovie(petwantplay_movie);
+    petwantplay_movie->start();
+
+
+
+    // 将 QLabel 转换为可单击的控件，并将其连接到一个槽函数
+    m_petTalkLabel->setCursor(Qt::PointingHandCursor);
+    connect(m_petTalkLabel, &PushLabel::clicked, this, &MainWindow::OnEnterGameBtnClicked);
+
+    // 创建一个 QTimer，5 秒后调用 hidePetTalk() 槽函数
+    QTimer::singleShot(5000, this, &MainWindow::hidePetTalk);
+
+}
 void MainWindow::FeedPet()
 {
     // Get the selected food item
@@ -113,7 +230,7 @@ void MainWindow::FeedPet()
     {
         if ((*owned_pet_food)[1].m_number < 1)
         {
-            QMessageBox::warning(this, "提示", "你没有足够的食物！", QMessageBox::Ok);
+            QMessageBox::warning(this, "提示", "你没有足够的肉！", QMessageBox::Ok);
             return;
         }
         else
@@ -125,7 +242,7 @@ void MainWindow::FeedPet()
     else if (foodType == "Vegetable (" + QString::number((*owned_pet_food)[2].m_number) + ")")
     {
         if ((*owned_pet_food)[2].m_number < 1) {
-            QMessageBox::warning(this, "提示", "你没有足够的食物！", QMessageBox::Ok);
+            QMessageBox::warning(this, "提示", "你没有足够的蔬菜！", QMessageBox::Ok);
             return;
         }
         else
@@ -156,6 +273,11 @@ void MainWindow::SetHunger(int hunger)
     pet_hunger = (hunger > 100) ? 100 : hunger;
     hunger_displayed_label->setText("Hunger level: " + QString::number(pet_hunger));
     emit HungerChanged(pet_hunger);
+
+    if (pet_hunger == hungerlevel2)
+    {
+        emit HungerLevelCritical();
+    }
 }
 
 void MainWindow::IncreaseHunger()
@@ -247,12 +369,11 @@ void MainWindow::InitHungerSystem()
 {
     pethunger_timer = new QTimer(this);
     connect(pethunger_timer, SIGNAL(timeout()), this, SLOT(IncreaseHunger()));
-    connect(pethunger_timer, SIGNAL(timeout()), this, SLOT(RefreshAppearance()));
+    connect(this, SIGNAL(HungerLevelCritical()), this, SLOT(RefreshAppearance()));
     pethunger_timer->start(60000);
 
     peteating_movie = new QMovie(":/resources/motion/eating.gif");
     peteating_movie->setScaledSize(pet_displayed_label->size());
-    connect(peteating_movie, SIGNAL(finished()), this, SLOT(StopEating()));
 
     hunger_displayed_label = new QLabel("Hunger level: " + QString::number(pet_hunger), this);
     hunger_displayed_label->hide();
@@ -276,6 +397,11 @@ void MainWindow::InitButton()
     entershop_btn->move(1,121);
     entershop_btn->resize(60,60);
     connect(entershop_btn,&QPushButton::clicked,this,&MainWindow::OnEnterShopBtnClicked);
+
+    entergame_btn=new QPushButton("game",this);
+    entergame_btn->move(1,181);
+    entergame_btn->resize(60,60);
+    connect(entergame_btn,&QPushButton::clicked,this,&MainWindow::OnEnterGameBtnClicked);
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
@@ -296,6 +422,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
         if (dragDistance.manhattanLength()> QApplication::startDragDistance()) //判断是否进入拖动
         {
            petlabel_isdragging = true; //设置拖拽状态为是
+           m_talkTimer->stop();
            QPoint diff = event->globalPos() - petlabel_dragstartposition;
            move(diff);
            QMovie* backgroundMovie = new QMovie(this);
@@ -318,6 +445,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent* event)
     if (event->button() == Qt::LeftButton && petlabel_isdragging) //左键释放结束拖动
     {
         petlabel_isdragging = false;
+        m_talkTimer->start();
         RefreshAppearance();
     }
     else if (event->button() == Qt::LeftButton && !petlabel_isdragging) //左键释放时还未进入拖动，判断为点击
@@ -370,16 +498,28 @@ void MainWindow::OnAppChooseBtnClicked()
 
 void MainWindow::RefreshAppearance()
 {
-    if (pet_hunger >= 60&&pet_hunger<80)
+    if(screenedge_isattached_left)
+    {
+         pet_displayed_label->setPixmap(QPixmap(":/resources/static/stopwall.png").scaled(pet_displayed_label->size()));
+    }
+    else if(screenedge_isattached_right)
+    {
+        pet_displayed_label->setPixmap(QPixmap(":/resources/static/stopwall2.png").scaled(pet_displayed_label->size()));
+    }
+    else if (pet_hunger>=hungerlevel2)
         {
-            pet_displayed_label->setPixmap(QPixmap(":/resources/static/default4.png").scaled(pet_displayed_label->size()));
-        }
-    else if(pet_hunger >=80)
-        {
-        	pet_displayed_label->setPixmap(QPixmap(":/resources/static/default3.png").scaled(pet_displayed_label->size()));
+            pet_displayed_label->setPixmap(QPixmap(":/resources/static/default3.png").scaled(pet_displayed_label->size()));
         }
     else
         {
         	pet_displayed_label->setPixmap(displayed_pet_appearance.app_picture.scaled(pet_displayed_label->size()));
         }
+
+}
+void MainWindow::hidePetTalk()
+{
+    // 将 QLabel 隐藏，并取消与其的连接
+    m_petTalkLabel->hide();
+    m_petTalkLabel->disconnect();
+    RefreshAppearance();
 }
