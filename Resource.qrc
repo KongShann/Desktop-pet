@@ -42,7 +42,6 @@
         <file>resources/motion/wantingplay.gif</file>
         <file>resources/static/stoppic.png</file>
         <file>resources/static/stopgame.png</file>
-        <file>../stopwall.jpg</file>
         <file>resources/static/stopwall.png</file>
         <file>resources/static/stopwall2.png</file>
     </qresource>

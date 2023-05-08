@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     pet_movements->push_back(":/resources/movements/movement3.gif");
     pet_movements->push_back(":/resources/movements/hungry_movement.gif");
 
+    hidetalkset=0;
     displayed_pet_appearance=(*owned_pet_appearances)[0];
 
     setWindowFlags(Qt::FramelessWindowHint|Qt::Tool);
@@ -55,7 +56,6 @@ MainWindow::MainWindow(QWidget *parent)
        m_petTalkLabel->hide();
        m_talkTimer = new QTimer(this);
        m_talkTimer->setInterval(10000);
-       connect(m_talkTimer, &QTimer::timeout, this, &MainWindow::showPetTalk);
        m_talkTimer->start();
 
 
@@ -106,30 +106,21 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
         // 如果窗口在屏幕右侧，将其吸附到屏幕右侧并隐藏所有按钮,并停止计时
         if (pos.x() + width >= screen_geometry.width())
         {
+            hidePetTalk();
             pet_displayed_label->setPixmap(QPixmap(":/resources/static/stopwall2.png").scaled(pet_displayed_label->size()));
             this->move(screen_geometry.width() - width+50, pos.y());
             screenedge_isattached_right = true;
-            appchoose_btn->hide();
-            feedpet_btn->hide();
-            entershop_btn->hide();
-            entergame_btn->hide();
-            m_talkTimer->stop();
-            petmovement_timer->stop();
-            pethunger_timer->stop();
+            petwantplay_movie->stop();
+
 
         }
         else if (pos.x()-25 <= screen_geometry.x())
         {
+            hidePetTalk();
             pet_displayed_label->setPixmap(QPixmap(":/resources/static/stopwall.png").scaled(pet_displayed_label->size()));
             this->move(screen_geometry.x()-175, pos.y());
             screenedge_isattached_left = true;
-            appchoose_btn->hide();
-            feedpet_btn->hide();
-            entershop_btn->hide();
-            entergame_btn->hide();
-            m_talkTimer->stop();
-            petmovement_timer->stop();
-            pethunger_timer->stop();
+             petwantplay_movie->stop();
 
         }
 
@@ -203,6 +194,33 @@ void MainWindow::showPetTalk()
     // 创建一个 QTimer，5 秒后调用 hidePetTalk() 槽函数
     QTimer::singleShot(5000, this, &MainWindow::hidePetTalk);
 
+}
+void MainWindow::hiddenshowPetTalk()
+{
+if(screenedge_isattached_right){
+    if(hidetalkset==0)
+    {
+    m_petTalkLabel->setGeometry(0, 0, 200, 60);
+    m_petTalkLabel->setText("Hey, let's play a game!");
+    m_petTalkLabel->show();
+    m_petTalkLabel->setCursor(Qt::PointingHandCursor);
+    connect(m_petTalkLabel, &PushLabel::clicked, this, &MainWindow::OnEnterGameBtnClicked);
+    QTimer::singleShot(5000, this, &MainWindow::hidePetTalk);
+    hidetalkset=1;
+    }
+}
+if(screenedge_isattached_left){
+    if(hidetalkset==0)
+    {
+    m_petTalkLabel->setGeometry(100, 0, 200, 60);
+    m_petTalkLabel->setText("Hey, let's play a game!");
+    m_petTalkLabel->show();
+    m_petTalkLabel->setCursor(Qt::PointingHandCursor);
+    connect(m_petTalkLabel, &PushLabel::clicked, this, &MainWindow::OnEnterGameBtnClicked);
+    QTimer::singleShot(5000, this, &MainWindow::hidePetTalk);
+    hidetalkset=1;
+    }
+}
 }
 void MainWindow::FeedPet()
 {
@@ -500,19 +518,38 @@ void MainWindow::RefreshAppearance()
 {
     if(screenedge_isattached_left)
     {
-         pet_displayed_label->setPixmap(QPixmap(":/resources/static/stopwall.png").scaled(pet_displayed_label->size()));
+        appchoose_btn->hide();
+        feedpet_btn->hide();
+        entershop_btn->hide();
+        entergame_btn->hide();
+        petmovement_timer->stop();
+        pethunger_timer->stop();
+        pet_displayed_label->setPixmap(QPixmap(":/resources/static/stopwall.png").scaled(pet_displayed_label->size()));
+        connect(m_talkTimer, &QTimer::timeout, this, &MainWindow::hiddenshowPetTalk);
     }
     else if(screenedge_isattached_right)
     {
+        appchoose_btn->hide();
+        feedpet_btn->hide();
+        entershop_btn->hide();
+        entergame_btn->hide();
+        petmovement_timer->stop();
+        pethunger_timer->stop();
         pet_displayed_label->setPixmap(QPixmap(":/resources/static/stopwall2.png").scaled(pet_displayed_label->size()));
+         connect(m_talkTimer, &QTimer::timeout, this, &MainWindow::hiddenshowPetTalk);
     }
     else if (pet_hunger>=hungerlevel2)
         {
+            hidetalkset=0;
             pet_displayed_label->setPixmap(QPixmap(":/resources/static/default3.png").scaled(pet_displayed_label->size()));
         }
     else
         {
+            hidetalkset=0;
         	pet_displayed_label->setPixmap(displayed_pet_appearance.app_picture.scaled(pet_displayed_label->size()));
+            m_petTalkLabel->setGeometry(100, 0, 200, 60);
+            connect(m_talkTimer, &QTimer::timeout, this, &MainWindow::showPetTalk);
+             petwantplay_movie->start();
         }
 
 }

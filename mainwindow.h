@@ -58,6 +58,7 @@ private slots:
     void OnEnterFoodShopBtnClicked();
     void OnEnterGameBtnClicked();
     void showPetTalk();
+    void hiddenshowPetTalk();
     void hidePetTalk();
 
 protected:
@@ -96,6 +97,7 @@ private:
     bool  petlabel_isdragging;//显示窗口是否被拖拽
     bool screenedge_isattached_left; // 标识窗口是否吸附在屏幕边缘
     bool screenedge_isattached_right;
+    bool hidetalkset;
     QRect screen_geometry; // 屏幕的几何尺寸
     QList<QWidget*> widgetsToHide; // 需要隐藏的所有按钮
 
