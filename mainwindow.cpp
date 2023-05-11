@@ -4,47 +4,23 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , pet_hunger(20)
 {    
     ui->setupUi(this);
 
-    QString a= ":/resources/static/default.png";
-    QString b= ":/resources/static/default2.png";
-
     point=new QVector<int>;
     point->push_back(100);
-    owned_pet_appearances=new QVector<PetAppearance>;
-    owned_pet_appearances->push_back(PetAppearance(2,a,"aa",20));
-    owned_pet_appearances->push_back(PetAppearance(3,b,"BB",120));
-
-    not_owned_pet_appearances=new QVector<PetAppearance>;
-    not_owned_pet_appearances->push_back(PetAppearance(0,a,"a",10));
-    not_owned_pet_appearances->push_back(PetAppearance(1,b,"B",10));
-
-    owned_pet_food=new QVector<Food>;
-    owned_pet_food->push_back(Food(0,":/resources/static/fish.png","fish",35,5,-20));
-    owned_pet_food->push_back(Food(1,":/resources/static/meat.png","meat",20,5,-10));
-    owned_pet_food->push_back(Food(2,":/resources/static/vegetable.png","vegetable",12,5,-5));
-	
-    pet_movements=new QVector<QString>;
-    pet_movements->push_back(":/resources/movements/movement1.gif");
-    pet_movements->push_back(":/resources/movements/movement2.gif");
-    pet_movements->push_back(":/resources/movements/movement3.gif");
-    pet_movements->push_back(":/resources/movements/hungry_movement.gif");
-
-    displayed_pet_appearance=(*owned_pet_appearances)[0];
-
+    frequency_of_interact=10;
     setWindowFlags(Qt::FramelessWindowHint|Qt::Tool);
     setAttribute(Qt::WA_TranslucentBackground);
     Qt::WindowFlags m_flags = windowFlags();
     setWindowFlags(m_flags|Qt::WindowStaysOnTopHint);
 
-    pet_displayed_label=new QLabel(this);
-    pet_displayed_label->resize(175,150);
-    pet_displayed_label->move(125,50);
-    RefreshAppearance();
-    InitPetmovementMovies();
+    InitSettings();
+    InitTaskSys();
+    InitObjects();
     InitHungerSystem();
+    InitDisplayedLabel();
+    InitPetmovementMovies();
     InitButton();
 }
 MainWindow::~MainWindow()
@@ -134,6 +110,10 @@ void MainWindow::FeedPet()
             SetHunger((pet_hunger+(*owned_pet_food)[2].m_hunger));
         }
     }
+    if((*tasklist)[0].task_target>(*tasklist)[0].task_progress)
+    {
+        (*tasklist)[0].task_progress++;
+    }
     pet_hunger = qMax(pet_hunger, 0);
     pet_displayed_label->setMovie(peteating_movie);
     peteating_movie->start();
@@ -165,13 +145,19 @@ void MainWindow::IncreaseHunger()
 
 void MainWindow::enterEvent(QEvent *event)
 {
-    hunger_displayed_label->setText("Hunger level: " + QString::number(pet_hunger));
-    hunger_displayed_label->show();
+    if(s_state_of_feedsys)
+    {
+        hunger_displayed_label->setText("Hunger level: " + QString::number(pet_hunger));
+        hunger_displayed_label->show();
+    }
 }
 
 void MainWindow::leaveEvent(QEvent *event)
 {
-    hunger_displayed_label->hide();
+    if(s_state_of_feedsys)
+    {
+        hunger_displayed_label->hide();
+    }
 }
 
 void MainWindow::OnFeedPetBtnClicked()
@@ -215,8 +201,92 @@ void MainWindow::OnFeedPetBtnClicked()
         foodListDialog->exec();
 }
 
+void MainWindow::InitSettings()
+{
+    qRegisterMetaTypeStreamOperators<QVector<int>>("QVector<int>");
+    qRegisterMetaTypeStreamOperators<QVector<bool>>("QVector<bool>");
+    QString settings_filepath = QCoreApplication::applicationDirPath()+"/UserSettings.ini";
+    user_settings=new QSettings(settings_filepath,QSettings::IniFormat);
+    if(!QFile::exists(settings_filepath))
+    {
+        user_settings->setValue("Settings/feedsys",1);
+        user_settings->setValue("Settings/tasksys",1);
+        user_settings->setValue("Label/position",QPoint(125,50));
+        user_settings->setValue("Pet/appearance",0);
+        user_settings->setValue("Pet/hunger",20);
+        user_settings->setValue("Pet/owned_appearances",QVariant::fromValue(QVector<int>{0}));
+        user_settings->setValue("Pet/not_owned_appearances",QVariant::fromValue(QVector<int>{1}));
+        user_settings->setValue("Pet/owned_food",QVariant::fromValue(QVector<int>{1,1,1}));
+        user_settings->setValue("Task/progress",QVariant::fromValue(QVector<int>{0}));
+        user_settings->setValue("Task/finished",QVariant::fromValue(QVector<bool>{0}));
+    }
+    state_of_feedsys=user_settings->value("Settings/feedsys").toBool();
+    state_of_tasksys=user_settings->value("Settings/tasksys").toBool();
+    s_state_of_feedsys=state_of_feedsys;
+    s_state_of_tasksys=state_of_tasksys;
+}
+
+void MainWindow::InitTaskSys()
+{
+    tasklist=new QVector<Task>;
+    tasklist->push_back(Task(0,100,10,0,"喂食宠物10次",0));
+    progress_of_tasks=user_settings->value("Task/progress").value<QVector<int>>();
+    if_finished_tasks=user_settings->value("Task/finished").value<QVector<bool>>();
+    for(int i=0;i<tasklist->size();i++)
+    {
+        (*tasklist)[i].task_progress=progress_of_tasks[i];
+        (*tasklist)[i].task_finished=if_finished_tasks[i];
+    }
+}
+
+void MainWindow::InitObjects()
+{
+    pet_appearances = new QVector<PetAppearance>;
+    pet_appearances->push_back(PetAppearance(0,":/resources/static/default.png","wink",20));
+    pet_appearances->push_back(PetAppearance(1,":/resources/static/default2.png","smlian",20));
+
+    owned_pet_appearances = new QVector<PetAppearance>;
+    id_owned_apps=user_settings->value("Pet/owned_appearances").value<QVector<int>>();
+    for(int i:id_owned_apps)
+    {
+        owned_pet_appearances->push_back((*pet_appearances)[i]);
+    }
+    not_owned_pet_appearances=new QVector<PetAppearance>;
+    id_not_owned_apps=user_settings->value("Pet/not_owned_appearances").value<QVector<int>>();
+    for(int i:id_not_owned_apps)
+    {
+        not_owned_pet_appearances->push_back((*pet_appearances)[i]);
+    }
+
+    owned_pet_food=new QVector<Food>;
+    owned_pet_food->push_back(Food(0,":/resources/static/fish.png","fish",35,0,-20));
+    owned_pet_food->push_back(Food(1,":/resources/static/meat.png","meat",20,0,-10));
+    owned_pet_food->push_back(Food(2,":/resources/static/vegetable.png","vegetable",12,0,-5));
+    num_owned_food=user_settings->value("Pet/owned_food").value<QVector<int>>();
+    for(int i=0;i<owned_pet_food->size();i++)
+    {
+        (*owned_pet_food)[i].m_number=num_owned_food[i];
+    }
+}
+void MainWindow::InitDisplayedLabel()
+{
+    pet_displayed_label=new QLabel(this);
+    pet_displayed_label->resize(175,150);
+    pet_displayed_label->move(125,50);
+    window_position=user_settings->value("Label/position").toPoint();
+    this->move(window_position);
+    displayed_pet_appearance=(*owned_pet_appearances)[user_settings->value("Pet/appearance").toInt()];
+    RefreshAppearance();
+}
+
 void MainWindow::InitPetmovementMovies()
 {
+    pet_movements=new QVector<QString>;
+    pet_movements->push_back(":/resources/movements/movement1.gif");
+    pet_movements->push_back(":/resources/movements/movement2.gif");
+    pet_movements->push_back(":/resources/movements/movement3.gif");
+    pet_movements->push_back(":/resources/movements/hungry_movement.gif");
+
     petmovement_timer=new QTimer(this);
     petmovement_timer->setInterval(12000);
     petmovement_timer->start();
@@ -245,18 +315,25 @@ void MainWindow::InitPetmovementMovies()
 
 void MainWindow::InitHungerSystem()
 {
-    pethunger_timer = new QTimer(this);
-    connect(pethunger_timer, SIGNAL(timeout()), this, SLOT(IncreaseHunger()));
-    connect(pethunger_timer, SIGNAL(timeout()), this, SLOT(RefreshAppearance()));
-    pethunger_timer->start(60000);
+    if(s_state_of_feedsys)
+    {
+        pet_hunger=user_settings->value("Pet/hunger").toInt();
+        pethunger_timer = new QTimer(this);
+        connect(pethunger_timer, SIGNAL(timeout()), this, SLOT(IncreaseHunger()));
+        connect(pethunger_timer, SIGNAL(timeout()), this, SLOT(RefreshAppearance()));
+        pethunger_timer->start(60000);
 
-    peteating_movie = new QMovie(":/resources/motion/eating.gif");
-    peteating_movie->setScaledSize(pet_displayed_label->size());
-    connect(peteating_movie, SIGNAL(finished()), this, SLOT(StopEating()));
+        peteating_movie = new QMovie(":/resources/motion/eating.gif");
+        peteating_movie->setScaledSize(QSize(175,150));
 
-    hunger_displayed_label = new QLabel("Hunger level: " + QString::number(pet_hunger), this);
-    hunger_displayed_label->hide();
-    hunger_displayed_label->setGeometry(50, 50, 150, 30);
+        hunger_displayed_label = new QLabel("Hunger level: " + QString::number(pet_hunger), this);
+        hunger_displayed_label->hide();
+        hunger_displayed_label->setGeometry(50, 50, 150, 30);
+    }
+    else
+    {
+        pet_hunger=0;
+    }
 }
 
 void MainWindow::InitButton()
@@ -276,6 +353,21 @@ void MainWindow::InitButton()
     entershop_btn->move(1,121);
     entershop_btn->resize(60,60);
     connect(entershop_btn,&QPushButton::clicked,this,&MainWindow::OnEnterShopBtnClicked);
+
+    exit_btn=new QPushButton("exit",this);
+    exit_btn->move(1,181);
+    exit_btn->resize(60,60);
+    connect(exit_btn,&QPushButton::clicked,this,&MainWindow::OnExitBtnClicked);
+
+    entersettingswin_btn=new QPushButton("settings",this);
+    entersettingswin_btn->move(61,1);
+    entersettingswin_btn->resize(60,60);
+    connect(entersettingswin_btn,&QPushButton::clicked,this,&MainWindow::OnEnterSettingsWindowBtnClicked);
+
+    entertaskwin_btn=new QPushButton("task",this);
+    entertaskwin_btn->move(61,61);
+    entertaskwin_btn->resize(60,60);
+    connect(entertaskwin_btn,&QPushButton::clicked,this,&MainWindow::OnEnterTaskWindowBtnClicked);
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
@@ -366,6 +458,60 @@ void MainWindow::OnAppChooseBtnClicked()
     appchoose_win=new AppChooseWindow(owned_pet_appearances);
     connect(appchoose_win,&AppChooseWindow::AppearanceChanged,this,&MainWindow::OnAppearanceChanged);
     appchoose_win->show();
+}
+
+void MainWindow::OnExitBtnClicked()
+{
+    for(PetAppearance p:*owned_pet_appearances)
+    {
+        if(id_owned_apps.indexOf(p.app_id)==-1) id_owned_apps.push_back(p.app_id);
+    }
+    id_not_owned_apps.clear();
+    for(PetAppearance p:*pet_appearances)
+    {
+        if(id_owned_apps.indexOf(p.app_id)==-1) id_not_owned_apps.push_back(p.app_id);
+    }
+    user_settings->setValue("Pet/owned_appearances",QVariant::fromValue(id_owned_apps));
+    user_settings->setValue("Pet/not_owned_appearances",QVariant::fromValue(id_not_owned_apps));
+
+    for(Food p:*owned_pet_food)
+    {
+        num_owned_food[p.food_id]=p.m_number;
+    }
+    user_settings->setValue("Pet/owned_food",QVariant::fromValue(num_owned_food));
+
+    for(Task t:*tasklist)
+    {
+        progress_of_tasks[t.task_id]=t.task_progress;
+        if_finished_tasks[t.task_id]=t.task_finished;
+    }
+    user_settings->setValue("Task/progress",QVariant::fromValue(progress_of_tasks));
+    user_settings->setValue("Task/finished",QVariant::fromValue(if_finished_tasks));
+
+    if(s_state_of_feedsys)
+    {
+        user_settings->setValue("Pet/hunger",pet_hunger);
+    }
+
+    window_position=this->pos();
+    user_settings->setValue("Label/position",window_position);
+    user_settings->setValue("Pet/appearance",(*owned_pet_appearances).indexOf(displayed_pet_appearance));
+    user_settings->setValue("Settings/feedsys",state_of_feedsys);
+    user_settings->setValue("Settings/tasksys",state_of_tasksys);
+    user_settings->sync();
+    qApp->exit(0);
+}
+
+void MainWindow::OnEnterSettingsWindowBtnClicked()
+{
+    settings_win=new SettingsWindow(state_of_feedsys,state_of_tasksys,frequency_of_interact);
+    settings_win->show();
+}
+
+void MainWindow::OnEnterTaskWindowBtnClicked()
+{
+    task_win=new TaskWindow(tasklist,point2);
+    task_win->show();
 }
 
 void MainWindow::RefreshAppearance()

@@ -1,6 +1,4 @@
 #include "shopdress.h"
-#include "mainwindow.h"
-#include "petobjects_struct.h"
 #include "ui_shopdress.h"
 
 shopDress::shopDress(QVector<PetAppearance> *owned_pet_appearances,QVector<PetAppearance> *notowned_pet_appearances,QVector<int> *m_point,QWidget *parent) :

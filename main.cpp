@@ -1,6 +1,4 @@
 #include "mainwindow.h"
-#include "shopdress.h"
-#include "appchoosewindow.h"
 
 #include <QApplication>
 
