@@ -1,3 +1,4 @@
+QT += multimedia
 QT       += core gui \
     quick
 
@@ -17,7 +18,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    alarmclock.cpp \
     appchoosewindow.cpp \
+    calendarwidget.cpp \
     foodshop.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -25,6 +28,9 @@ SOURCES += \
     pushlabel.cpp
 
 HEADERS += \
+    C:/Users/lenovo/Documents/Tencent Files/3394066153/FileRecv/alarmclock.h \
+    alarmclock.h \
+    calendarwidget.h \
     foodshop.h \
     mainwindow.h \
     shopdress.h \
@@ -33,6 +39,7 @@ HEADERS += \
     pushlabel.h
 
 FORMS += \
+    alarmclock.ui \
     foodshop.ui \
     mainwindow.ui \
     shopdress.ui \

@@ -16,6 +16,8 @@
 #include "appchoosewindow.h"
 #include "shopdress.h"
 #include "foodshop.h"
+#include "alarmclock.h"
+#include "calendarwidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -39,7 +41,7 @@ public:
 
 signals:
     void HungerChanged(int GetHunger);
-	
+
 private slots:
     void OnAppearanceChanged(int label_index);
     void OnAppChooseBtnClicked();
@@ -48,11 +50,14 @@ private slots:
     void OnFeedPetBtnClicked();
     void RefreshAppearance();//根据饥饿值改变宠物外观
     void OnEnterShopBtnClicked();
+    void OnEnterDailyFunctionBtnClicked();
     void OnEnterAppShopBtnClicked();
     void OnEnterFoodShopBtnClicked();
+    void OnEnterAlarmClockBtnClicked();
+    void OnEnterCalendarBtnClicked();
 
 protected:
-	void enterEvent(QEvent *event) override;
+    void enterEvent(QEvent *event) override;
     void leaveEvent(QEvent *event) override;    //用于实现鼠标进入窗口时显示饥饿值
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
@@ -74,15 +79,26 @@ private:
     QPushButton* entershop_btn;//进入商店按扭指针
     QPushButton* enterappshop_btn;//装饰商店
     QPushButton* enterfoodshop_btn;//食物商店
+    QPushButton* enteralarmclock_btn;//闹钟设置
+     QPushButton* entercalendar_btn;//日历设置
+    QPushButton* enterdailyfunc_btn;//日常功能
     QVector<PetAppearance> *owned_pet_appearances; //已拥有的宠物外观
     QVector<Food> *owned_pet_food;//背包
     QVector<PetAppearance> *not_owned_pet_appearances;//未拥有的宠物外观
     QVector<int> *point;//余额
     QPoint petlabel_dragstartposition;//显示窗口开始被拖拽时的位置
     bool  petlabel_isdragging;//显示窗口是否被拖拽
+    alarmclock *myclock;
+    QPushButton *calenBtn;//日历按钮
+    CalendarWidget* m_calendarWidget;
 
 };
 #endif // MAINWINDOW_H
+
+
+
+
+
 
 
 

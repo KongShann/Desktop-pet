@@ -1,11 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QApplication>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , pet_hunger(20)
-{    
+{
     ui->setupUi(this);
 
     QString a= ":/resources/static/default.png";
@@ -25,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
     owned_pet_food->push_back(Food(0,":/resources/static/fish.png","fish",35,5,-20));
     owned_pet_food->push_back(Food(1,":/resources/static/meat.png","meat",20,5,-10));
     owned_pet_food->push_back(Food(2,":/resources/static/vegetable.png","vegetable",12,5,-5));
-	
+
     pet_movements=new QVector<QString>;
     pet_movements->push_back(":/resources/movements/movement1.gif");
     pet_movements->push_back(":/resources/movements/movement2.gif");
@@ -67,6 +68,20 @@ void MainWindow::OnEnterShopBtnClicked()
        shopCenter->show();
 }
 
+void MainWindow::OnEnterDailyFunctionBtnClicked()
+{
+    QDialog *FunctionCenter=new QDialog(this);
+    FunctionCenter->setWindowTitle("日常功能");
+    enteralarmclock_btn=new  QPushButton("闹钟");
+    QVBoxLayout *layout=new QVBoxLayout(FunctionCenter);
+    entercalendar_btn=new  QPushButton("日历");
+    layout->addWidget(enteralarmclock_btn);
+    layout->addWidget(entercalendar_btn);
+    FunctionCenter->show();
+    connect(enteralarmclock_btn, &QPushButton::clicked, this, &MainWindow::OnEnterAlarmClockBtnClicked);
+    connect(entercalendar_btn, &QPushButton::clicked, this, &MainWindow::OnEnterCalendarBtnClicked);
+}
+
 void MainWindow::OnEnterAppShopBtnClicked()
 {
     QDialog* dialog = qobject_cast<QDialog*>(sender()->parent());
@@ -85,6 +100,20 @@ void MainWindow::OnEnterFoodShopBtnClicked()
     foodShop food(owned_pet_food,point);
     food.show();
     food.exec();
+}
+
+void MainWindow::OnEnterAlarmClockBtnClicked()
+{
+    QDialog* dialog = qobject_cast<QDialog*>(sender()->parent());
+    dialog->close();
+
+    myclock=new alarmclock();
+    myclock->show();
+}
+
+void MainWindow::OnEnterCalendarBtnClicked(){
+    m_calendarWidget = new CalendarWidget(this);
+    m_calendarWidget->show();
 }
 
 void MainWindow::FeedPet()
@@ -276,6 +305,11 @@ void MainWindow::InitButton()
     entershop_btn->move(1,121);
     entershop_btn->resize(60,60);
     connect(entershop_btn,&QPushButton::clicked,this,&MainWindow::OnEnterShopBtnClicked);
+
+    enterdailyfunc_btn=new QPushButton("daily",this);
+    enterdailyfunc_btn->move(1,181);
+   enterdailyfunc_btn->resize(60,60);
+    connect(enterdailyfunc_btn,&QPushButton::clicked,this,&MainWindow::OnEnterDailyFunctionBtnClicked);
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
@@ -376,10 +410,10 @@ void MainWindow::RefreshAppearance()
         }
     else if(pet_hunger >=80)
         {
-        	pet_displayed_label->setPixmap(QPixmap(":/resources/static/default3.png").scaled(pet_displayed_label->size()));
+            pet_displayed_label->setPixmap(QPixmap(":/resources/static/default3.png").scaled(pet_displayed_label->size()));
         }
     else
         {
-        	pet_displayed_label->setPixmap(displayed_pet_appearance.app_picture.scaled(pet_displayed_label->size()));
+            pet_displayed_label->setPixmap(displayed_pet_appearance.app_picture.scaled(pet_displayed_label->size()));
         }
 }
