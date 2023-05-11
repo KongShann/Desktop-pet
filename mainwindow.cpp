@@ -4,7 +4,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , pet_hunger(80)
+    , pet_hunger(60)
 {    
     ui->setupUi(this);
 
@@ -509,30 +509,23 @@ void MainWindow::RefreshAppearance()
 {
     if(screenedge_isattached_left)
     {
-         pet_displayed_label->setPixmap(QPixmap(":/resources/static/stopwall.png").scaled(pet_displayed_label->size()));
+        pet_displayed_label->setPixmap(QPixmap(":/resources/static/stopwall.png").scaled(pet_displayed_label->size()));
     }
     else if(screenedge_isattached_right)
     {
         pet_displayed_label->setPixmap(QPixmap(":/resources/static/stopwall2.png").scaled(pet_displayed_label->size()));
     }
-    else if (pet_hunger>=hungerlevel2)
-        {
-            pet_displayed_label->setPixmap(QPixmap(":/resources/static/default3.png").scaled(pet_displayed_label->size()));
-        }
-    else
-        {
-        	pet_displayed_label->setPixmap(displayed_pet_appearance.app_picture.scaled(pet_displayed_label->size()));
-        }
-
-    if(cleanvalue < 50 && pet_hunger < hungerlevel2) // 当洁净值低于50且当前外观为干净时，改变外观
+    else if(pet_hunger>=hungerlevel2)
     {
-        isdirty = true;
+        pet_displayed_label->setPixmap(QPixmap(":/resources/static/default3.png").scaled(pet_displayed_label->size()));
+    }
+    else if(cleanvalue < 50 && pet_hunger < hungerlevel2) // 当洁净值低于50且当前外观为干净时，改变外观
+    {
         pet_displayed_label->setPixmap(QPixmap(":/resources/movements/dirty_movemoent.png").scaled(pet_displayed_label->size()));
     }
-    else if(cleanvalue > 50 && isdirty && pet_hunger < hungerlevel2)
+    else if(cleanvalue >= 50 && pet_hunger < hungerlevel2)
     {
-    QPixmap cleanPixmap(":/resources/static/default.png");
-    isdirty = false;
+        pet_displayed_label->setPixmap(displayed_pet_appearance.app_picture.scaled(pet_displayed_label->size()));
     }
 }
 void MainWindow::hidePetTalk()
@@ -545,11 +538,11 @@ void MainWindow::hidePetTalk()
 
 void MainWindow::CleanSystem()
 {
-    cleanvalue = 100; // 初始洁净值为100
+    cleanvalue = 60; // 初始洁净值为100
     isdirty = false; // 初始外观为干净
     dirty_timer = new QTimer(this);
     connect(dirty_timer, SIGNAL(timeout()), this, SLOT(DecreaseClean()));
-    dirty_timer->start(10000); // 设置定时器，每10秒钟洁净值下降1点
+    dirty_timer->start(1000); // 设置定时器，每10秒钟洁净值下降1点
 }
 
 void MainWindow::DecreaseClean()

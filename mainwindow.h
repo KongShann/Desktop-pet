@@ -106,7 +106,7 @@ private:
     QLabel *dirtyImageLabel;//肮脏图片指针
     QTimer *dirty_timer;//清洁度计时器指针
     QMovie *petwashing_movie;//宠物洗澡动画指针
-    QPushButton *wash_btn;//洗
+    QPushButton *wash_btn;//洗澡按钮
 
 };
 #endif // MAINWINDOW_H
