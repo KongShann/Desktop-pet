@@ -44,5 +44,7 @@
         <file>resources/static/stopgame.png</file>
         <file>resources/static/stopwall.png</file>
         <file>resources/static/stopwall2.png</file>
+        <file>resources/motion/washing.gif</file>
+        <file>resources/movements/dirty_movemoent.png</file>
     </qresource>
 </RCC>

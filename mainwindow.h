@@ -60,6 +60,9 @@ private slots:
     void showPetTalk();
     void hiddenshowPetTalk();
     void hidePetTalk();
+    void CleanSystem();
+    void DecreaseClean();
+    void OnCleanButtonClicked();//清洁按钮
 
 protected:
 	void enterEvent(QEvent *event) override;
@@ -98,10 +101,14 @@ private:
     bool  petlabel_isdragging;//显示窗口是否被拖拽
     bool screenedge_isattached_left; // 标识窗口是否吸附在屏幕边缘
     bool screenedge_isattached_right;
-    bool hidetalkset;
     QRect screen_geometry; // 屏幕的几何尺寸
     QList<QWidget*> widgetsToHide; // 需要隐藏的所有按钮
-
+    int cleanvalue;//清洁值
+    bool isdirty;//处于肮脏状态
+    QLabel *dirtyImageLabel;//肮脏图片指针
+    QTimer *dirty_timer;//清洁度计时器指针
+    QMovie *petwashing_movie;//宠物洗澡动画指针
+    QPushButton *wash_btn;//洗澡按钮
 
 };
 #endif // MAINWINDOW_H
