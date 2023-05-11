@@ -77,6 +77,7 @@ private:
     QTimer *petmovement_timer;//宠物动作计时器指针
     QTimer *pethunger_timer;//饥饿值增长计时器指针
     QTimer *m_talkTimer;//非主动下宠物游戏计时器
+    QTimer *m_talkTimer2;
     QLabel *pet_displayed_label; //外观显示Lable指针
     QLabel *hunger_displayed_label;//显示饥饿值Lable指针
     PushLabel *m_petTalkLabel;//非主动下宠物请求游戏
