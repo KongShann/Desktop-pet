@@ -19,6 +19,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     appchoosewindow.cpp \
     foodshop.cpp \
+    game.cpp \
     main.cpp \
     mainwindow.cpp \
     shopdress.cpp\
@@ -26,6 +27,7 @@ SOURCES += \
 
 HEADERS += \
     foodshop.h \
+    game.h \
     mainwindow.h \
     shopdress.h \
     appchoosewindow.h \
@@ -34,6 +36,7 @@ HEADERS += \
 
 FORMS += \
     foodshop.ui \
+    game.ui \
     mainwindow.ui \
     shopdress.ui \
     appchoosewindow.ui
@@ -47,6 +50,5 @@ RESOURCES += \
     Resource.qrc
 
 DISTFILES +=
-
-QMAKE_CXXFLAGS += /source-charset:utf-8 /execution-charset:utf-8
+#QMAKE_CXXFLAGS += /source-charset:utf-8 /execution-charset:utf-8
 
