@@ -22,24 +22,33 @@ SOURCES += \
     game.cpp \
     main.cpp \
     mainwindow.cpp \
+    settingswindow.cpp \
     shopdress.cpp\
-    pushlabel.cpp
+    pushlabel.cpp \
+    taskbar.cpp \
+    taskwindow.cpp
 
 HEADERS += \
     foodshop.h \
     game.h \
     mainwindow.h \
+    settingswindow.h \
     shopdress.h \
     appchoosewindow.h \
     petobjects_struct.h \
-    pushlabel.h
+    pushlabel.h \
+    taskbar.h \
+    taskwindow.h
 
 FORMS += \
     foodshop.ui \
     game.ui \
     mainwindow.ui \
+    settingswindow.ui \
     shopdress.ui \
-    appchoosewindow.ui
+    appchoosewindow.ui \
+    taskbar.ui \
+    taskwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -50,5 +59,5 @@ RESOURCES += \
     Resource.qrc
 
 DISTFILES +=
-#QMAKE_CXXFLAGS += /source-charset:utf-8 /execution-charset:utf-8
+QMAKE_CXXFLAGS += /source-charset:utf-8 /execution-charset:utf-8
 
