@@ -526,7 +526,7 @@ void MainWindow::InitButton()
 
     feedpet_btn = new QPushButton(this);
     feedpet_btn->setIcon(QIcon(":/resources/buttons/婴儿餐具.png"));
-    feedpet_btn->move(1,46);
+    feedpet_btn->move(46,181);
     feedpet_btn->resize(45,45);
     connect(feedpet_btn,&QPushButton::clicked, this,&MainWindow::OnFeedPetBtnClicked);
 
@@ -538,7 +538,7 @@ void MainWindow::InitButton()
 
     exit_btn=new QPushButton(this);
     exit_btn->setIcon(QIcon(":/resources/buttons/x.png"));
-    exit_btn->move(1,136);
+    exit_btn->move(46,46);
     exit_btn->resize(45,45);
     connect(exit_btn,&QPushButton::clicked,this,&MainWindow::OnExitBtnClicked);
 
@@ -550,7 +550,7 @@ void MainWindow::InitButton()
 
     entertaskwin_btn=new QPushButton(this);
     entertaskwin_btn->setIcon(QIcon(":/resources/buttons/calendar-check.png"));
-    entertaskwin_btn->move(46,46);
+    entertaskwin_btn->move(1,136);
     entertaskwin_btn->resize(45,45);
     connect(entertaskwin_btn,&QPushButton::clicked,this,&MainWindow::OnEnterTaskWindowBtnClicked);
 	
@@ -568,7 +568,7 @@ void MainWindow::InitButton()
 	
     enterdailyfunc_btn=new QPushButton(this);
     enterdailyfunc_btn->setIcon(QIcon(":/resources/buttons/控制日志.png"));
-    enterdailyfunc_btn->move(46,181);
+    enterdailyfunc_btn->move(1,46);
     enterdailyfunc_btn->resize(45,45);
     connect(enterdailyfunc_btn,&QPushButton::clicked,this,&MainWindow::OnEnterDailyFunctionBtnClicked);
 }
@@ -590,12 +590,12 @@ void MainWindow::RefreshButtons()
     else
     {
         appchoose_btn->show();
-        feedpet_btn->show();
+        if(state_of_feedsys) feedpet_btn->show();
         entershop_btn->show();
         entergame_btn->show();
         wash_btn->show();
         exit_btn->show();
-        entertaskwin_btn->show();
+        if(state_of_tasksys) entertaskwin_btn->show();
         entersettingswin_btn->show();
 		enterdailyfunc_btn->show();
     }
