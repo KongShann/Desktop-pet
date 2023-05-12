@@ -17,6 +17,14 @@ struct PetAppearance
         ,app_picture(app_pic_path)
         ,app_name(app_name)
     {}
+    bool operator==(const PetAppearance& other)const
+    {
+      return app_id==other.app_id;
+    }
+    bool operator!=(const PetAppearance& other)const
+    {
+      return app_id!=other.app_id;
+    }
 };
 struct Food
 {
@@ -35,6 +43,25 @@ struct Food
         ,m_number(m_number)
         ,food_picture(food_pic_path)
         ,food_name(food_name)
+    {}
+};
+struct Task
+{
+    int task_id;
+    int task_payment;
+    int task_target;
+    int task_progress;
+    QString task_description;
+    bool task_finished;
+    Task()
+    {}
+    Task(int task_id,int task_payment,int task_target,int task_progress,QString task_description,bool task_finished)
+        :task_id(task_id)
+        ,task_payment(task_payment)
+        ,task_target(task_target)
+        ,task_progress(task_progress)
+        ,task_description(task_description)
+        ,task_finished(task_finished)
     {}
 };
 

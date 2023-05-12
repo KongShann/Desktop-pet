@@ -1,7 +1,7 @@
 #include "foodshop.h"
 #include "ui_foodshop.h"
 
-foodShop::foodShop(QVector<Food> *owned_pet_food,QVector<int>* m_point,QWidget *parent) :
+foodShop::foodShop(QVector<Food> *owned_pet_food,int &m_point,QWidget *parent) :
     QDialog(parent),owned_pet_food_(owned_pet_food),m_balance(m_point),
     ui(new Ui::foodShop)
 
@@ -36,7 +36,7 @@ connect(m_productList, &QListWidget::currentRowChanged, [=](int row)
    m_productPriceLabel = new QLabel(this);
 
    // 创建余额标签
-   m_balanceLabel = new QLabel(QString("余额 %1").arg((*m_balance)[0]), this);
+   m_balanceLabel = new QLabel(QString("余额 %1").arg(m_balance), this);
 
    //创建预览按钮
    m_viewButton=new QPushButton("预览商品信息",this);
@@ -84,10 +84,10 @@ dialog->exec();
 void foodShop::buyProduct()
 {
 double price = m_products[m_selectedProductId].food_price ;
-if ((*m_balance)[0] >= price)
+if (m_balance >= price)
 {
-    (*m_balance)[0] -= price;
-    m_balanceLabel->setText(QString("余额：%1").arg((*m_balance)[0]));
+    m_balance -= price;
+    m_balanceLabel->setText(QString("余额：%1").arg(m_balance));
     // 处理购买商品逻辑
    (*owned_pet_food_)[m_selectedProductId].m_number++;
 

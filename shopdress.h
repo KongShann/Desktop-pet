@@ -21,7 +21,7 @@ class shopDress : public QDialog
 
 
 public:
-    explicit shopDress(QVector<PetAppearance> *owned_pet_appearances,QVector<PetAppearance> *notowned_pet_appearances,QVector<int> *m_point,QWidget *parent = nullptr);
+    explicit shopDress(QVector<PetAppearance> *owned_pet_appearances,QVector<PetAppearance> *notowned_pet_appearances,int &m_point,QWidget *parent = nullptr);
 
 
 
@@ -43,7 +43,7 @@ private:
     QVector<PetAppearance> *notowned_pet_appearances_;//数据成员
     QVector<PetAppearance> *owned_pet_appearances_;//数据成员
     int m_selectedProductId;
-    QVector<int> *m_balance;
+    int &m_balance;
     Ui::shopDress *ui;
 
 

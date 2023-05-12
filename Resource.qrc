@@ -8,7 +8,6 @@
         <file>resources/static/vegetable.png</file>
         <file>resources/motion/eating.gif</file>
         <file>resources/static/default3.png</file>
-        <file>resources/static/default4.png</file>
         <file>resources/movements/movement1.gif</file>
         <file>resources/movements/movement2.gif</file>
         <file>resources/movements/movement3.gif</file>
@@ -33,6 +32,27 @@
         <file>resources/left_mouse_click/leftclick13.gif</file>
         <file>resources/left_mouse_click/leftclick16.gif</file>
         <file>resources/left_mouse_click/leftclick17.gif</file>
-        <file>resources/music/Yoohsic Roomz - Eutopia.mp3</file>
+        <file>resources/game/paper.png</file>
+        <file>resources/game/rock.png</file>
+        <file>resources/game/scissor.png</file>
+        <file>resources/motion/readygif.gif</file>
+        <file>resources/motion/wingif.gif</file>
+        <file>resources/motion/ping.gif</file>
+        <file>resources/motion/lose.gif</file>
+        <file>resources/motion/wantingplay.gif</file>
+        <file>resources/static/stoppic.png</file>
+        <file>resources/static/stopgame.png</file>
+        <file>resources/static/stopwall.png</file>
+        <file>resources/static/stopwall2.png</file>
+        <file>resources/motion/washing.gif</file>
+        <file>resources/movements/dirty_movemoent.png</file>
+        <file>resources/buttons/玩具.png</file>
+        <file>resources/buttons/婴儿餐具.png</file>
+        <file>resources/buttons/浴缸.png</file>
+        <file>resources/buttons/alipay.png</file>
+        <file>resources/buttons/calendar-check.png</file>
+        <file>resources/buttons/控制日志.png</file>
+        <file>resources/buttons/设置.png</file>
+        <file>resources/buttons/x.png</file>
     </qresource>
 </RCC>

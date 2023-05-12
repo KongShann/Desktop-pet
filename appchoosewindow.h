@@ -18,12 +18,10 @@ class AppChooseWindow : public QWidget
 
 public:
     AppChooseWindow(QVector<PetAppearance>* owned_pet_apps,QWidget *parent=nullptr);
-    ~AppChooseWindow();
-public slots:
-    void OnPushLabelClicked(int label_index);
+    ~AppChooseWindow();  
 private slots:
     void on_confirm_button_clicked();
-
+    void OnPushLabelClicked(int label_index);
 private:
     Ui::AppChooseWindow *ui;
     QGridLayout* gridlayout;
