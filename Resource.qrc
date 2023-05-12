@@ -54,5 +54,8 @@
         <file>resources/buttons/控制日志.png</file>
         <file>resources/buttons/设置.png</file>
         <file>resources/buttons/x.png</file>
+        <file>resources/static/baseball.png</file>
+        <file>resources/static/shy.png</file>
+        <file>resources/static/shy2.png</file>
     </qresource>
 </RCC>
