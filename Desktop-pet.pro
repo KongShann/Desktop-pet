@@ -1,3 +1,4 @@
+QT += multimedia
 QT       += core gui \
     quick
 
@@ -17,7 +18,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    alarmclock.cpp \
     appchoosewindow.cpp \
+    calendarwidget.cpp \
     foodshop.cpp \
     game.cpp \
     main.cpp \
@@ -29,6 +32,8 @@ SOURCES += \
     taskwindow.cpp
 
 HEADERS += \
+    alarmclock.h \
+    calendarwidget.h \
     foodshop.h \
     game.h \
     mainwindow.h \
@@ -41,6 +46,7 @@ HEADERS += \
     taskwindow.h
 
 FORMS += \
+    alarmclock.ui \
     foodshop.ui \
     game.ui \
     mainwindow.ui \

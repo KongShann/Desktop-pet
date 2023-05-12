@@ -46,5 +46,13 @@
         <file>resources/static/stopwall2.png</file>
         <file>resources/motion/washing.gif</file>
         <file>resources/movements/dirty_movemoent.png</file>
+        <file>resources/buttons/玩具.png</file>
+        <file>resources/buttons/婴儿餐具.png</file>
+        <file>resources/buttons/浴缸.png</file>
+        <file>resources/buttons/alipay.png</file>
+        <file>resources/buttons/calendar-check.png</file>
+        <file>resources/buttons/控制日志.png</file>
+        <file>resources/buttons/设置.png</file>
+        <file>resources/buttons/x.png</file>
     </qresource>
 </RCC>

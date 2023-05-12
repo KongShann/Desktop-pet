@@ -4,12 +4,9 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-{    
+{
     ui->setupUi(this);
-
-    point=new QVector<int>;
-    point->push_back(100);
-    frequency_of_interact=10;
+	
     setWindowFlags(Qt::FramelessWindowHint|Qt::Tool);
     setAttribute(Qt::WA_TranslucentBackground);
     Qt::WindowFlags m_flags = windowFlags();
@@ -23,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     InitDisplayedLabel();
     InitPetmovementMovies();
     InitButton();
+    RefreshButtons();
 }
 MainWindow::~MainWindow()
 {
@@ -42,6 +40,20 @@ void MainWindow::OnEnterShopBtnClicked()
        layout->addWidget(enterappshop_btn);
        layout->addWidget(enterfoodshop_btn);
        shopCenter->show();
+}
+
+void MainWindow::OnEnterDailyFunctionBtnClicked()
+{
+    QDialog *FunctionCenter=new QDialog(this);
+    FunctionCenter->setWindowTitle("日常功能");
+    enteralarmclock_btn=new  QPushButton("闹钟");
+    QVBoxLayout *layout=new QVBoxLayout(FunctionCenter);
+    entercalendar_btn=new  QPushButton("日历");
+    layout->addWidget(enteralarmclock_btn);
+    layout->addWidget(entercalendar_btn);
+    FunctionCenter->show();
+    connect(enteralarmclock_btn, &QPushButton::clicked, this, &MainWindow::OnEnterAlarmClockBtnClicked);
+    connect(entercalendar_btn, &QPushButton::clicked, this, &MainWindow::OnEnterCalendarBtnClicked);
 }
 
 void MainWindow::OnEnterAppShopBtnClicked()
@@ -81,7 +93,7 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
             this->move(screen_geometry.x()-175, pos.y());
             screenedge_isattached_left = true;
 
-             petwantplay_movie->stop();
+            petwantplay_movie->stop();
 
 
 
@@ -119,6 +131,20 @@ void MainWindow::OnEnterFoodShopBtnClicked()
     food.show();
     food.exec();
 }
+
+void MainWindow::OnEnterAlarmClockBtnClicked()
+{
+    QDialog* dialog = qobject_cast<QDialog*>(sender()->parent());
+    dialog->close();
+
+    myclock=new alarmclock();
+    myclock->show();
+}
+
+void MainWindow::OnEnterCalendarBtnClicked(){
+    m_calendarWidget = new CalendarWidget(this);
+    m_calendarWidget->show();
+}
 void MainWindow::OnEnterGameBtnClicked()
 {
     if(pet_hunger>hungerlevel2)
@@ -129,6 +155,10 @@ void MainWindow::OnEnterGameBtnClicked()
     else{
      game*Game=new game(this);
      Game->show();
+     if((*tasklist)[2].task_target>(*tasklist)[0].task_progress)
+     {
+         (*tasklist)[2].task_progress++;
+     }
     }
 }
 void MainWindow::showPetTalk()
@@ -141,6 +171,7 @@ void MainWindow::showPetTalk()
     pet_displayed_label->setMovie(petwantplay_movie);
     petwantplay_movie->start();
 
+//    qDebug()<<"aa";
 
     // 将 QLabel 转换为可单击的控件，并将其连接到一个槽函数
     m_petTalkLabel->setCursor(Qt::PointingHandCursor);
@@ -331,22 +362,29 @@ void MainWindow::InitSettings()
         user_settings->setValue("Label/position",QPoint(125,50));
         user_settings->setValue("Pet/appearance",0);
         user_settings->setValue("Pet/hunger",20);
+        user_settings->setValue("Pet/clean",100);
+        user_settings->setValue("Pet/point",100);
         user_settings->setValue("Pet/owned_appearances",QVariant::fromValue(QVector<int>{0}));
         user_settings->setValue("Pet/not_owned_appearances",QVariant::fromValue(QVector<int>{1}));
         user_settings->setValue("Pet/owned_food",QVariant::fromValue(QVector<int>{1,1,1}));
-        user_settings->setValue("Task/progress",QVariant::fromValue(QVector<int>{0}));
-        user_settings->setValue("Task/finished",QVariant::fromValue(QVector<bool>{0}));
+        user_settings->setValue("Task/progress",QVariant::fromValue(QVector<int>{0,0,0,0}));
+        user_settings->setValue("Task/finished",QVariant::fromValue(QVector<bool>{0,0,0,0}));
+        user_settings->setValue("Settings/frequency",10000);
     }
     state_of_feedsys=user_settings->value("Settings/feedsys").toBool();
     state_of_tasksys=user_settings->value("Settings/tasksys").toBool();
     s_state_of_feedsys=state_of_feedsys;
     s_state_of_tasksys=state_of_tasksys;
+    frequency_of_interact=user_settings->value("Settings/frequency").toInt();
 }
 
 void MainWindow::InitTaskSys()
 {
     tasklist=new QVector<Task>;
     tasklist->push_back(Task(0,100,10,0,"喂食宠物10次",0));
+    tasklist->push_back(Task(1,100,10,0,"清洁宠物10次",0));
+    tasklist->push_back(Task(2,100,10,0,"与宠物游戏10次",0));
+    tasklist->push_back(Task(3,100,3,0,"购买3件外观",0));
     progress_of_tasks=user_settings->value("Task/progress").value<QVector<int>>();
     if_finished_tasks=user_settings->value("Task/finished").value<QVector<bool>>();
     for(int i=0;i<tasklist->size();i++)
@@ -358,6 +396,8 @@ void MainWindow::InitTaskSys()
 
 void MainWindow::InitObjects()
 {
+    point=user_settings->value("Pet/point").toInt();
+
     pet_appearances = new QVector<PetAppearance>;
     pet_appearances->push_back(PetAppearance(0,":/resources/static/default.png","wink",20));
     pet_appearances->push_back(PetAppearance(1,":/resources/static/default2.png","smlian",20));
@@ -404,11 +444,11 @@ void MainWindow::InitDisplayedLabel()
     m_petTalkLabel->setGeometry(100, 0, 200, 60);
     m_petTalkLabel->hide();
     m_talkTimer = new QTimer(this);
-    m_talkTimer->setInterval(10000);
+    m_talkTimer->setInterval(15000);
     connect(m_talkTimer, &QTimer::timeout, this, &MainWindow::showPetTalk);
     m_talkTimer->start();
     m_talkTimer2 = new QTimer(this);
-    m_talkTimer2->setInterval(10000);
+    m_talkTimer2->setInterval(frequency_of_interact*4);
     connect(m_talkTimer2, &QTimer::timeout, this, &MainWindow::hiddenshowPetTalk);
     showPetTalk();
     RefreshAppearance();
@@ -423,12 +463,12 @@ void MainWindow::InitPetmovementMovies()
     pet_movements->push_back(":/resources/movements/hungry_movement.gif");
 
     petmovement_timer=new QTimer(this);
-    petmovement_timer->setInterval(12000);
+    petmovement_timer->setInterval(frequency_of_interact);
     petmovement_timer->start();
     connect(petmovement_timer,&QTimer::timeout,[=]()
     {
         int move_index;
-        if(pet_hunger<80) move_index=QRandomGenerator::global()->bounded(3);
+        if(pet_hunger<hungerlevel1) move_index=QRandomGenerator::global()->bounded(3);
         else move_index=QRandomGenerator::global()->bounded(pet_movements->size());
         QMovie *displayed_movement=new QMovie((*pet_movements)[move_index]);
         displayed_movement->setSpeed(50);
@@ -463,7 +503,7 @@ void MainWindow::InitHungerSystem()
 
         hunger_displayed_label = new QLabel("Hunger level: " + QString::number(pet_hunger), this);
         hunger_displayed_label->hide();
-        hunger_displayed_label->setGeometry(50, 50, 150, 30);
+        hunger_displayed_label->setGeometry(150, 50, 150, 30);
     }
     else
     {
@@ -478,43 +518,56 @@ void MainWindow::InitButton()
     appchoose_btn = new QPushButton(this);
     appchoose_btn->setIcon(QIcon(":/resources/buttons/select_appearance.png"));
     appchoose_btn->move(1,1);
-    appchoose_btn->resize(60,60);
+    appchoose_btn->resize(45,45);
     connect(appchoose_btn,&QPushButton::clicked,this,&MainWindow::OnAppChooseBtnClicked);
 
-    feedpet_btn = new QPushButton("Feed pet", this);
-    feedpet_btn->move(1,61);
-    feedpet_btn->resize(60,60);
+    feedpet_btn = new QPushButton(this);
+    feedpet_btn->setIcon(QIcon(":/resources/buttons/婴儿餐具.png"));
+    feedpet_btn->move(1,46);
+    feedpet_btn->resize(45,45);
     connect(feedpet_btn,&QPushButton::clicked, this,&MainWindow::OnFeedPetBtnClicked);
 
-    entershop_btn=new QPushButton("shop",this);
-    entershop_btn->move(1,121);
-    entershop_btn->resize(60,60);
+    entershop_btn=new QPushButton(this);
+    entershop_btn->setIcon(QIcon(":/resources/buttons/alipay.png"));
+    entershop_btn->move(1,91);
+    entershop_btn->resize(45,45);
     connect(entershop_btn,&QPushButton::clicked,this,&MainWindow::OnEnterShopBtnClicked);
 
-    exit_btn=new QPushButton("exit",this);
-    exit_btn->move(1,181);
-    exit_btn->resize(60,60);
+    exit_btn=new QPushButton(this);
+    exit_btn->setIcon(QIcon(":/resources/buttons/x.png"));
+    exit_btn->move(1,136);
+    exit_btn->resize(45,45);
     connect(exit_btn,&QPushButton::clicked,this,&MainWindow::OnExitBtnClicked);
 
-    entersettingswin_btn=new QPushButton("settings",this);
-    entersettingswin_btn->move(61,1);
-    entersettingswin_btn->resize(60,60);
+    entersettingswin_btn=new QPushButton(this);
+    entersettingswin_btn->setIcon(QIcon(":/resources/buttons/设置.png"));
+    entersettingswin_btn->move(46,1);
+    entersettingswin_btn->resize(45,45);
     connect(entersettingswin_btn,&QPushButton::clicked,this,&MainWindow::OnEnterSettingsWindowBtnClicked);
 
-    entertaskwin_btn=new QPushButton("task",this);
-    entertaskwin_btn->move(61,61);
-    entertaskwin_btn->resize(60,60);
+    entertaskwin_btn=new QPushButton(this);
+    entertaskwin_btn->setIcon(QIcon(":/resources/buttons/calendar-check.png"));
+    entertaskwin_btn->move(46,46);
+    entertaskwin_btn->resize(45,45);
     connect(entertaskwin_btn,&QPushButton::clicked,this,&MainWindow::OnEnterTaskWindowBtnClicked);
 	
-    entergame_btn=new QPushButton("game",this);
-    entergame_btn->move(61,121);
-    entergame_btn->resize(60,60);
+    entergame_btn=new QPushButton(this);
+    entergame_btn->setIcon(QIcon(":/resources/buttons/玩具.png"));
+    entergame_btn->move(46,91);
+    entergame_btn->resize(45,45);
     connect(entergame_btn,&QPushButton::clicked,this,&MainWindow::OnEnterGameBtnClicked);
 
-    wash_btn=new QPushButton("wash",this);
-    wash_btn->move(61,181);
-    wash_btn->resize(60,60);
+    wash_btn=new QPushButton(this);
+    wash_btn->setIcon(QIcon(":/resources/buttons/浴缸.png"));
+    wash_btn->move(46,136);
+    wash_btn->resize(45,45);
     connect(wash_btn,&QPushButton::clicked,this,&MainWindow::OnCleanButtonClicked);
+	
+    enterdailyfunc_btn=new QPushButton(this);
+    enterdailyfunc_btn->setIcon(QIcon(":/resources/buttons/控制日志.png"));
+    enterdailyfunc_btn->move(46,181);
+    enterdailyfunc_btn->resize(45,45);
+    connect(enterdailyfunc_btn,&QPushButton::clicked,this,&MainWindow::OnEnterDailyFunctionBtnClicked);
 }
 
 void MainWindow::RefreshButtons()
@@ -529,6 +582,7 @@ void MainWindow::RefreshButtons()
         exit_btn->hide();
         entertaskwin_btn->hide();
         entersettingswin_btn->hide();
+		enterdailyfunc_btn->hide();
     }
     else
     {
@@ -540,7 +594,9 @@ void MainWindow::RefreshButtons()
         exit_btn->show();
         entertaskwin_btn->show();
         entersettingswin_btn->show();
+		enterdailyfunc_btn->show();
     }
+
 }
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
@@ -673,11 +729,15 @@ void MainWindow::OnExitBtnClicked()
         user_settings->setValue("Pet/hunger",pet_hunger);
     }
 
+    user_settings->setValue("Pet/clean",cleanvalue);
+
     window_position=this->pos();
     user_settings->setValue("Label/position",window_position);
     user_settings->setValue("Pet/appearance",(*owned_pet_appearances).indexOf(displayed_pet_appearance));
     user_settings->setValue("Settings/feedsys",state_of_feedsys);
     user_settings->setValue("Settings/tasksys",state_of_tasksys);
+    user_settings->setValue("Pet/point",point);
+    user_settings->setValue("Settings/frequency",frequency_of_interact);
     user_settings->sync();
     qApp->exit(0);
 }
@@ -690,7 +750,18 @@ void MainWindow::OnEnterSettingsWindowBtnClicked()
 
 void MainWindow::OnEnterTaskWindowBtnClicked()
 {
-    task_win=new TaskWindow(tasklist,point2);
+    if((*tasklist)[3].task_target>(*tasklist)[3].task_progress)
+    {
+        if(owned_pet_appearances->size()-1>(*tasklist)[3].task_target)
+        {
+             (*tasklist)[3].task_progress=(*tasklist)[3].task_target;
+        }
+        else
+        {
+             (*tasklist)[3].task_progress=owned_pet_appearances->size()-1;
+        }
+    }
+    task_win=new TaskWindow(tasklist,point);
     task_win->show();
 }
 
@@ -754,11 +825,10 @@ void MainWindow::hidePetTalk()
 
 void MainWindow::CleanSystem()
 {
-    cleanvalue = 60; // 初始洁净值为100
-    isdirty = false; // 初始外观为干净
+    cleanvalue = user_settings->value("Pet/clean").toInt();
     dirty_timer = new QTimer(this);
     connect(dirty_timer, SIGNAL(timeout()), this, SLOT(DecreaseClean()));
-    dirty_timer->start(1000); // 设置定时器，每10秒钟洁净值下降1点
+    dirty_timer->start(60000); // 设置定时器，每10秒钟洁净值下降1点
 }
 
 void MainWindow::DecreaseClean()
@@ -789,13 +859,19 @@ void MainWindow::OnCleanButtonClicked()
     int totalTime = petwashing_movie->frameCount() * petwashing_movie->nextFrameDelay();
     QTimer::singleShot(totalTime, this, [=](){
     petwashing_movie->stop();
+    RefreshAppearance();
     petmovement_timer->start();
     m_talkTimer->start();
     dirty_timer->start();
     if(s_state_of_feedsys) pethunger_timer->start();
-
     });
     cleanvalue += 10; // 点击按钮，洁净值增加10点
+
+    if((*tasklist)[1].task_target>(*tasklist)[1].task_progress)
+    {
+        (*tasklist)[1].task_progress++;
+    }
+
     if (cleanvalue > 100) {
         cleanvalue = 100; // 将洁净值限制在0到100之间
     }

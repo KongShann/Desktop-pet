@@ -1,7 +1,7 @@
 #include "shopdress.h"
 #include "ui_shopdress.h"
 
-shopDress::shopDress(QVector<PetAppearance> *owned_pet_appearances,QVector<PetAppearance> *notowned_pet_appearances,QVector<int> *m_point,QWidget *parent) :
+shopDress::shopDress(QVector<PetAppearance> *owned_pet_appearances,QVector<PetAppearance> *notowned_pet_appearances,int &m_point,QWidget *parent) :
     QDialog(parent),notowned_pet_appearances_(notowned_pet_appearances),owned_pet_appearances_(owned_pet_appearances),m_balance(m_point),
     ui(new Ui::shopDress)
 {
@@ -36,7 +36,7 @@ shopDress::shopDress(QVector<PetAppearance> *owned_pet_appearances,QVector<PetAp
 
        // 创建余额标签
 
-       m_balanceLabel = new QLabel(QString("余额 %1").arg((*m_balance)[0]), this);
+       m_balanceLabel = new QLabel(QString("余额 %1").arg(m_balance), this);
 
        //创建预览按钮
        m_viewButton=new QPushButton("预览商品信息",this);
@@ -85,10 +85,10 @@ void shopDress::buyProduct()
 {
 
     double price = m_products[m_selectedProductId].app_price ;
-    if ((*m_balance)[0] >= price)
+    if (m_balance >= price)
     {
-        (*m_balance)[0] -= price;
-        m_balanceLabel->setText(QString("余额：%1").arg((*m_balance)[0]));
+        m_balance -= price;
+        m_balanceLabel->setText(QString("余额：%1").arg(m_balance));
         owned_pet_appearances_->push_back(m_products[m_selectedProductId]);
         notowned_pet_appearances_->erase(notowned_pet_appearances_->begin()+m_selectedProductId);
         // 处理购买商品逻辑

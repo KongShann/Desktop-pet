@@ -15,7 +15,7 @@ SettingsWindow::SettingsWindow(bool &state_of_feedsys,bool &state_of_tasksys,int
     {
         ui->checkBox_2->setDisabled(true);
     }
-    ui->horizontalSlider->setValue(frequency_of_interact);
+    ui->horizontalSlider->setValue(101-(frequency_of_interact/10000));
 }
 
 SettingsWindow::~SettingsWindow()
@@ -52,5 +52,12 @@ void SettingsWindow::on_checkBox_2_stateChanged(int state)
 
 void SettingsWindow::on_horizontalSlider_valueChanged(int value)
 {
-    frequency_of_interact_=value;
+    if(value==0)
+    {
+        frequency_of_interact_= 100000000;
+    }
+    else
+    {
+        frequency_of_interact_= (101-value)*10000;
+    }
 }
