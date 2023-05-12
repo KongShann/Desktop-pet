@@ -365,7 +365,7 @@ void MainWindow::InitSettings()
         user_settings->setValue("Pet/clean",100);
         user_settings->setValue("Pet/point",100);
         user_settings->setValue("Pet/owned_appearances",QVariant::fromValue(QVector<int>{0}));
-        user_settings->setValue("Pet/not_owned_appearances",QVariant::fromValue(QVector<int>{1}));
+        user_settings->setValue("Pet/not_owned_appearances",QVariant::fromValue(QVector<int>{1,2,3,4}));
         user_settings->setValue("Pet/owned_food",QVariant::fromValue(QVector<int>{1,1,1}));
         user_settings->setValue("Task/progress",QVariant::fromValue(QVector<int>{0,0,0,0}));
         user_settings->setValue("Task/finished",QVariant::fromValue(QVector<bool>{0,0,0,0}));
@@ -400,7 +400,10 @@ void MainWindow::InitObjects()
 
     pet_appearances = new QVector<PetAppearance>;
     pet_appearances->push_back(PetAppearance(0,":/resources/static/default.png","wink",20));
-    pet_appearances->push_back(PetAppearance(1,":/resources/static/default2.png","smlian",20));
+    pet_appearances->push_back(PetAppearance(1,":/resources/static/default2.png","noface",20));
+    pet_appearances->push_back(PetAppearance(2,":/resources/static/baseball.png","baseball",20));
+    pet_appearances->push_back(PetAppearance(3,":/resources/static/shy.png","shy1",20));
+    pet_appearances->push_back(PetAppearance(4,":/resources/static/shy2.png","shy2",20));
 
     owned_pet_appearances = new QVector<PetAppearance>;
     id_owned_apps=user_settings->value("Pet/owned_appearances").value<QVector<int>>();
