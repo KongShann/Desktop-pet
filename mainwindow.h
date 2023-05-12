@@ -50,6 +50,7 @@ public:
     void InitTaskSys();
     int GetHunger() const;
     void SetHunger(int GetHunger);
+    void RefreshButtons();
 
 signals:
     void HungerChanged(int GetHunger);
@@ -141,6 +142,7 @@ private:
     bool s_state_of_feedsys;
     bool s_state_of_tasksys;
     int frequency_of_interact;
+    bool show_buttons;
 };
 #endif // MAINWINDOW_H
 

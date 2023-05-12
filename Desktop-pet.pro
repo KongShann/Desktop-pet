@@ -59,5 +59,5 @@ RESOURCES += \
     Resource.qrc
 
 DISTFILES +=
-#QMAKE_CXXFLAGS += /source-charset:utf-8 /execution-charset:utf-8
+QMAKE_CXXFLAGS += /source-charset:utf-8 /execution-charset:utf-8
 
