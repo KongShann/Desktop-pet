@@ -28,7 +28,6 @@ SOURCES += \
     pushlabel.cpp
 
 HEADERS += \
-    C:/Users/lenovo/Documents/Tencent Files/3394066153/FileRecv/alarmclock.h \
     alarmclock.h \
     calendarwidget.h \
     foodshop.h \
@@ -55,5 +54,5 @@ RESOURCES += \
 
 DISTFILES +=
 
-#QMAKE_CXXFLAGS += /source-charset:utf-8 /execution-charset:utf-8
+QMAKE_CXXFLAGS += /source-charset:utf-8 /execution-charset:utf-8
 
