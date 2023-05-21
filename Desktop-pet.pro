@@ -1,4 +1,6 @@
-QT       += core gui
+QT += multimedia
+QT       += core gui \
+    quick
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,14 +18,43 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    alarmclock.cpp \
+    appchoosewindow.cpp \
+    calendarwidget.cpp \
+    foodshop.cpp \
+    game.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    settingswindow.cpp \
+    shopdress.cpp\
+    pushlabel.cpp \
+    taskbar.cpp \
+    taskwindow.cpp
 
 HEADERS += \
-    mainwindow.h
+    alarmclock.h \
+    calendarwidget.h \
+    foodshop.h \
+    game.h \
+    mainwindow.h \
+    settingswindow.h \
+    shopdress.h \
+    appchoosewindow.h \
+    petobjects_struct.h \
+    pushlabel.h \
+    taskbar.h \
+    taskwindow.h
 
 FORMS += \
-    mainwindow.ui
+    alarmclock.ui \
+    foodshop.ui \
+    game.ui \
+    mainwindow.ui \
+    settingswindow.ui \
+    shopdress.ui \
+    appchoosewindow.ui \
+    taskbar.ui \
+    taskwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -34,3 +65,5 @@ RESOURCES += \
     Resource.qrc
 
 DISTFILES +=
+QMAKE_CXXFLAGS += /source-charset:utf-8 /execution-charset:utf-8
+
